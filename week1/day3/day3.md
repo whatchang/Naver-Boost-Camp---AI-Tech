@@ -35,7 +35,6 @@
          &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; method 추가방법은 기존 함수와 같으나 파라미터에 self를 추가해줘야 한다. 이때 self는 생성된 instance 자신을 의미한다.
          
         <br><br>
-
         * OOP 특징 - 상속, 다형성, 가시성<br>
         &nbsp; - &nbsp;상속 <br>
         &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 부모클래스로부터 속성과 메소드를 물려받는 것을 말한다.<br>
