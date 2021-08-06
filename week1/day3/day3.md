@@ -129,86 +129,52 @@
 	<p align='center'><img src = "./img/log_level.png" width="350px"></p>
 
         
+    <br><br>
+
+    * 정보 설정하기(프로그램 옵션 설정하기)<br>
+        &nbsp; - &nbsp;configparser<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 프로그램의 실행 설정을 file에 저장한다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Section, Key, Value값의 형태로 설정된 파일을 사용<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 설정파일을 Dict Type으로 호출후 사용<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; configparser 모듈을 이용한다.<br>
+
+        * argparser<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; console창에서 프로그램 실행시 setting정보를 저장한다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Command-Line Option이라고 부름<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; argparse 모듈을 사용한다.<br>
+        <img src='./img/argparser.png'>
         <br><br>
 
-        * Tuple - 값의 변경이 불가능한 리스트<br>
-        &nbsp; - &nbsp;(&nbsp;)을 이용하여 선언 <br>
-        &nbsp; - &nbsp;사용하는 이유 -> 사용자의 실수에 의한 에러를 사전에 방지하기 위해서 <br><br>
-
-        * Set - 값의 순서없이 저장, 중복 불허하는 자료형.<br>
-        &nbsp; - &nbsp;set() 혹은 {}를 통해서 선언할 수 있다. <br>
-        &nbsp; - &nbsp;합집합, 교지합, 차집합 등의 집합연산이 가능 <br>
-        <br>
-
-        * Dictionary - 데이터를 key와 value의 쌍으로 저장하는 방식<br>
-        &nbsp; - &nbsp;key값을 활용하여 데이터(value)값을 관리한다. <br>
-        &nbsp; - &nbsp;{key : value}로 선언을 한다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; values() : value정보를 담고 있는 객체<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; keys() : key정보를 담고 있는 객체<br><br>
-
-        * collection - 사용자의 편의성을 위해 제공되는 여러 모듈의 집합<br>
-        &nbsp; - &nbsp;deque : stack과 queue 자료구조를 지원, list보다 효율적이다. <br>
-        &nbsp; - &nbsp;Counter :  시퀀스 데이터의 원소들을 각 원소와 원소의 총 개수로 표현하는 dictionary를 반환<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; word counter의 기능으로 활용할 수 있다.<br><br>
-        &nbsp; - &nbsp;OrderedDict : Dictinary와 달리, 데이터를 입력한 순서대로 반환함(과거에는 그랬으나 현재는 기본 Dictionary로 이것을 보장해준다.) <br>
-        &nbsp; - &nbsp;defaultdict :  Dictionary type의 기본 값을 지정하여 신규값 생성시 활용할 수 있는 자료구조<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Text mining접근법 - Vector Space Model에 유용하게 사용될 수 있다.<br><br>
-        &nbsp; - &nbsp;namedtuple :  Tuple 형태의 data를 이름을 지정하여 선언하게 도와주는 자료구조<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; pop() : 가장 마지막 원소를 꺼낸다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; append() : 가장 마지막에 원소를 추가한다.<br><br>
-
     * 5-2강 : Python data handling
-        * Pythonic code란? - 파일썬 특유의 문법을 활용한 코드이다.<br>
-        &nbsp; - &nbsp;이것을 배워야 하는 이유는? -> 많은 사람들이 이 방식으로 코드를 작성하기 때문에 해당 코드들을 이해하기 위해서 배워야 한다<br><br>
+        * CSV<br>
+        &nbsp; - &nbsp; 쉼표로 구분한 텍스트 파일<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; csv, pandas 등의 모듈이 있다. pandas모듈을 많이 사용하는 것 같다.<br>
 
-            
-        - 인터프리터 언어(프로그램 실행시 기계어로 바꿔줌, os에 상관없이 실행 가능) <-> 컴파일 언어(실행전 어셈과 기계어로 번역해줌, os에 따라 실행이 안 될 수도 있음)
-        - 객체 지향
-        - 동적 타이핑 언어 - 프로그램 실행시 데이터 타입을 정하는 방식
-        - 다양한 라이브러리가 있다.
-        
-        &nbsp;&nbsp;☆ 파이썬의 유래 : 몬티 파이썬이라는 코메디 그룹에서 이름이 유래되었다. 그리고 여기서 파이썬은 그리스 신화속 괴물 뱀을 말한다.
+        * 정규표현식 [정리한 ppt](https://docs.google.com/presentation/d/1UJPMofkHHjDsNvpnZJXrwkDT6122eyo4R4TliGadosY/edit?usp=sharing)
+        <br>
+        &nbsp; - &nbsp; 파이썬에서 정규표현식을 활용하려면 re 모듈을 사용해야 된다. [re 모듈에 대한 설명 및 예시](https://brownbears.tistory.com/506)<br>
         <br>
 
-        * split & join - 문자열을 나누거나 합치는데 사용됨<br>
-        &nbsp; - &nbsp;split() : 특정 기준으로 나눠서 list형태로 반환 <br>
-        &nbsp; - &nbsp;join() : 특정 기준으로 문자열로 구성된 list의 원소들을 하나의 문자열로 만든다. <br>
+        * XML <br>
+        &nbsp; - &nbsp;데이터의 구조와 의미를 설명 <br>
+        &nbsp; - &nbsp;TAG를 사용하여 표시 <br>
         <br>
 
-        * list comprehension - list를 만들때 일반적인 for문을 활용하여 append하는 것보다 좋은 효율을 지닌 방식.<br>
-        &nbsp; - &nbsp;기본적인 사용 방식 : [x for i in range(len(5))]<br>
-        &nbsp; - &nbsp;특정(기준이 있는)값 필러링하는 방식 : [i for i in range(len(5)) if i % 2 == 0]<br>
-        &nbsp; - &nbsp;삼항식을 이용한 방식 : [i if i % 2 == 0 else i * 2 for i in range(len(5))] <br>
-        &nbsp; - &nbsp;2차원 배열 만들기 : [[x for i in range(len(5)) for _ in range(len(5))]] <br>
+        * JSON<br>
+        &nbsp; - &nbsp; Java script의 데이터 객체 표현 방식<br>
+        &nbsp; - &nbsp;데이터 용량이 적고, Code로의 전환이 쉽다.<br>
+        &nbsp; - &nbsp;json 사용한다.<br>
         <br>
 
-        * enumerate & zip <br>
-        &nbsp; - &nbsp;enumerate : list의 원소를 순서대로 추출하는데 이때 번호를 붙여서 추출한다 <br>
-        &nbsp; - &nbsp;zip : 2개 이상의 list의 값을 병렬적으로 추출한다. <br>
+        * beautifulsoup<br>
+        &nbsp; - &nbsp;HTML, XML등 마크업 언어 스크랩핑을 위한 패키지 <br>
+        &nbsp; - &nbsp;위의 정규표현식 연습할때 이것도 해보려고 시도는 해봤으나 실패 ㅠㅠ<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 이유 : ajax 를 get으로 호출한 후 받은 데이터를 해당 사이트에서 만든 javascript 메소드의 인자값으로 넣어주고 거기서 추가로 처리하는 과정이 있다(이 과정에서 자바스크립트 변수의 정보를 html태크로 변형해서 추가해준다.). 여기서 나는 get으로 데이터 받고 해당 데이터를 사이틍에서 만든 메소드를 이용하여 처리하지 못 했다. 그리고 해당 자바스크립트 변수에 접근 및 데이터를 볼 수 없었다(get으로 받은 데이터에서 -> 아마도 get에서 받은 데이터에는 자바스크립트 변수가 담고 있는 정보는 없는듯하다.). <br>
+        &nbsp; - &nbsp; [연습한 코드](./main.py)<br>
+        &nbsp; - &nbsp;참고한 사이트<br>
+        &nbsp;  &nbsp;[ajax 데이터 받아오기](https://fabl1106.github.io/python/2019/04/25/%ED%8C%8C%EC%9D%B4%EC%8D%AC-22.-%EB%8F%99%EC%A0%81%ED%81%AC%EB%A1%A4%EB%A7%81(Ajax,-JSON).html)
+        &nbsp; , &nbsp;[beautifulsoup 예시](https://soyoung-new-challenge.tistory.com/22)
         <br>
-
-        * lamda & map & reduce - legacy한 방식이지만 여전히 많이 사용된다.<br>
-        &nbsp; - &nbsp;lambda : C언어에 매크로 함수와 비슷한것 같다.<br> ex) lambda x, y : x + y  <br>
-        &nbsp; - &nbsp;map : 2개 이상의 list에 함수를 적용하는 방식으로 사용된다.<br>ex) map(lambda x, y : x+y, list(1,2,3,4,5), list(1,2,3,4,5)) -> list(2,4,6,8,10) <br>
-        &nbsp; - &nbsp;reduce : 하나의 list에 똑같은 함수를 중첩?해서 적용<br> ex) reduce(lambda x, y : x + y, list(1,2,3,4,5)) - > 15  <br>
-        <br>
-
-        * iterable object - sequence형 자료형에서 데이터를 순서대로 추출하는 객체<br>
-        &nbsp; - &nbsp;iter()을 사용하여 iterator 객체를 생성할 수 있다. <br>
-        &nbsp; - &nbsp;내부적으로 __ inter__ 와 __ next __가 사용된다.<br>
-        <br>
-
-        * generator - iteralbe o<br>
-        &nbsp; - &nbsp;iterable 객체를 특수한 형태로 사용할 수 있도록 해주는 함수<br>
-        &nbsp; - &nbsp;yield 사용시 특정 시점에서 element를 반환. -> 메모리를 효율적으로 사용할 수 있다. <br>
-        <br>
-
-        * asterisk - 값의 순서없이 저장, 중복 불허하는 자료형.<br>
-        &nbsp; - &nbsp;* : 곱셈 연산<br>
-        &nbsp; - &nbsp;*args : 튜플형태의 가변인자<br>
-        &nbsp; - &nbsp;*list() : unpacking 해주는 기능<br>
-        &nbsp; - &nbsp; ** : 제곱연산  <br>
-        &nbsp; - &nbsp; **kwargs : dictionary형태의 가변인자(keyward 형태로 인자를 전달함)<br>
         <br>
    
         
