@@ -126,7 +126,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; logging.StreamHandler는 log level이 warning으로 설정이 되어있다.<br>
         &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 셋팅된 레벨이하의 로그들을 출력해 준다. 아래의 예시는 기본레벨 셋팅으로 되어있다.<br>
         
-        <img src = "./img/log_level.png" width="350px">
+	<p align='center'><img src = "./img/log_level.png" width="350px"></p>
 
         
         <br><br>
