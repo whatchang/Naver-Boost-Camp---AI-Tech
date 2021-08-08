@@ -1,11 +1,10 @@
-# Day 3 ( Python basic for AI 4강 ~ 5강 / AI Math 7 ~ 9 강)
+# Weekend 1-2 ( Python basic for AI 6~7강)
 
 ## 목차 
 
 1. [강의 내용 정리](#1-강의-내용-정리)
 2. [과제 수행 과정 / 결과물 정리](#2-과제-수행-과정--결과물-정리)
-3. [피어세션 정리](#3-피어세션-정리)
-4. [학습 회고](#4-학습-회고)
+3. [학습 회고](#4-학습-회고)
 
 
 
@@ -13,63 +12,196 @@
 
 ### 1. 강의 내용 정리
 
-* 오늘은 강의을 하나도 못 듣고 선택과제와 밀렸던 강의 내용 정리에 시간을 다 사용해버렸다 ㅠㅠ. 그래도 아직 다 정리가 끝나지 않아서 토요일까지 해야 할 것 같다. 그리고 파이썬 남은 강의는 주말에 듣고 그것도 정리해서 올릴 생각이다.
+* Python basic for AI 6~ 7강
+    * 6강 : nummpy
+        * numpy 특징 <br>
+        &nbsp; - &nbsp;일반 List에 비해 빠르고, 메모리 효율적이다. <br>
+        &nbsp; - &nbsp;반복문 없이 데이터 배열에 대한 처리를 지원 <br>
+        &nbsp; - &nbsp; 선형대수와 관련된 다양한 기능을 제공 <br>
+        &nbsp; - &nbsp; dynamic typing을 지원하지 않는다. -> 그래서 메모리 효율적이다. <br>
+        <br>
+
+        * 선언 및 형태<br>
+        &nbsp; - &nbsp;선언 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; np.array를 통해서 선언<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; np.array(list, dtype)을 통해서 원소 type을 지정해 줄 수 있다.<br>
+        &nbsp; - &nbsp; 형태<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; shape : numpy array의 dimension(크기, 형태) 구성을 반환 -> ex) [[1,2,3], [4,5,6]]은 shape가 (2,3)이다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; (2,3)에서 앞에 오는 원소는 가장 높은 차원을 뜻하고 이후에 순차적으로 작아진다. ex) (3,1,2) -> 3차원 : 3, 2차원 : 1, 1차원 : 2를 뜻하며 이것을 배열로 나타내면 [[[1,2]], [[3,4]], [[5,6]]] 이 된다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; dtype : nummpy array데이터 type을 반환함. 위의 예시의 dtype은 int이다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; rank에 따라 불리는 이름이 있다.<br>
+        <img src='./img/rank.png'>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; ndim : dimension의 개수 -> rank<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; size는 총 원소의 수를 뜻한다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; ntype : ndarray object의 메모리 크기를 반환한다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; reshape : Array의 shape의 크기를 변경한다. 이때 변경전후의 원소의 갯수는 동일하다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; flatten : 다차원 array를 1차원 array로 변환시킨다.<br>
+        <br>
+        * indexing & slicing<br>
+        &nbsp; - &nbsp;indexing <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; [0,0] 표기법을 지원해준다.<br>
+
+        &nbsp; - &nbsp; slicing<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 행과 열 부분을 나눠서 slicing이 가능하다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; matrix의 부분 집합을 추출할 때 유용하다. <br>
+        <img src='./img/slicing.png'><br><br>
+
+        * creation function <br>
+        &nbsp; - &nbsp;arrange <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; array의 범위를 지정하여, 값의 list를 생성하는 명령어<br>
+
+        &nbsp; - &nbsp; ones, zeros, empty and someting_like<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; ones : 1로 가득찬 ndarray 생성<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; zeros : 0로 가득찬 ndarray 생성<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; empty : shape만 주어지고 비어있는 ndarray 생성 -> ndarray가 초기화 되어 있지 않음<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 기존 ndarray의 shape 크기 만큼 1, 0 또는 empty array를 반환<br>
+
+        &nbsp; - &nbsp; identity : 단위 행렬(i 행렬)을 생성함<br>
+        &nbsp; - &nbsp; eye : 대각선이 1인 행렬, 이때 대각선의 기준을 k로 설정할 수 있다.<br>
+        <p align='center'><img src='./img/eye.png' width=350></p>
+        &nbsp; - &nbsp; diag : 대각 행렬의 값을 추출함. 이때도 위와 같이 시작 행렬을 k로 설정할 수 있다.<br>
+
+        &nbsp; - &nbsp; random sampling : 데이터 분포에 따른 sampling으로 array를 생성<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; np.random.uniform : 균등분포로 랜덤 생성<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; np.random.normal : 정규분포로 랜던 생성<br>
+
+        * operation function <br>
+        &nbsp; - &nbsp; sum : ndarray의 원소들 간의 합을 구함, list의 sum 기능과 동일<br>
+        &nbsp; - &nbsp; axis : 모든 operation function을 실행할 때 기준이 되는 dimension 축<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; array의 범위를 지정하여, 값의 list를 생성하는 명령어<br>
+        &nbsp; - &nbsp; mean & std : ndarray의 원소들 간의 평균 또는 표준 편차를 반환<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 이 외에도 다양한 수학 연산자를 제공함<br>
+        &nbsp; - &nbsp; concatenate : 2개의 ndarray를 axis에 따라 붙이는 함수<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; vstack<br>
+        <p align='center'><img src='./img/vstack.png' width=350></p><br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; hstack<br>
+        <p align='center'><img src='./img/vstack.png' width=350></p><br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; concatenate / axis = 0<br>
+        <p align='center'><img src='./img/concatenate0.png' width=350></p><br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; concatenate / axis = 1<br>
+        <p align='center'><img src='./img/concatenate1.png' width=350></p><br><br>
+
+
+        * array operations <br>
+        &nbsp; - &nbsp; Element-wise operations : array간 shape이 같을 때 일어나는 연산<br>
+        &nbsp; - &nbsp; Dot product : Matrix의 기본 연산, dot 함수 사용<br>
+        &nbsp; - &nbsp; transpose : np.transpose 또느 object.T를 사용<br>
+        &nbsp; - &nbsp; broadcastsing : shape이 다른 배열 간 연산을 지원하는 기능<br>
+        <p align='center'><img src='./img/broadcasting.png' width=350></p><br><br>
+
+        * comparisons <br>
+        &nbsp; - &nbsp; all : 데이터 전부 조건에 만족 여부 반환<br>
+        &nbsp; - &nbsp; any : 데이터 일부 조건에 만족 여부 반환<br>
+        &nbsp; - &nbsp; np.where<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; 조건에 만족 여부 반환<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 조건에 만족 여부에 따라 지정된 값 반환<br>
+        &nbsp; - &nbsp; argmax : darray내 최댓값 index 반환<br>
+        &nbsp; - &nbsp; argmin : darray내 최솟값 index 반환<br>
+
+        * boolean & fancy index <br>
+        &nbsp; - &nbsp; boolean index : 특정 조건에 따른 값을 배열 형태로 추출, 이때 comparison operation 함수들도 모두 사용가능하다.<br>
+        &nbsp; - &nbsp; fancy index : darray를 index value로 사용해서 값 추출 -> object.take도 같은 기능<br>
+
+
+        * numpy data i/o <br>
+        &nbsp; - &nbsp; loadtxt, savetxt : text type의 데이터를 읽고 저장하는 기능<br>
+        &nbsp; - &nbsp; save, load : .npy(pickle 형태)로 저장, .npy 확장자 파일을 읽어옴<br>
+        <br><br>
+
+    * 7-1 강 : Module and Project
+        * Module<br>
+        &nbsp; - &nbsp;프로그램에서 특정 기능을 수행하는 작은 단위(개인적인 생각)<br>
+        &nbsp; - &nbsp;모듈화를 통해서 재사용성을 높일 수 있다.<br<br>
+
+            
+       * 패키지<br>
+        &nbsp; - &nbsp;모듈을 모아놓은 단위, 하나의 프로그램<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 패키지 구현시 폴더별로 __ init __ .py 만들고 안에 __ all__ 맨글링으로 사용할 하위 모듈(디렉토리) 이름 리스트와 'from . import 모듈 이름' 넣어준다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; ex)<br>
+        ![make_pakage](./img/make_pakage.png)
+        <br>
+
+        * 가상환경<br>
+        &nbsp; - &nbsp;프로젝트 진행 시 필요한 패키지만 설치하는 환경 <br>
+        &nbsp; - &nbsp;anaconda로 가상환경 만들고 사용하는 법<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 생성 : conda create -n 가상환경_이름 파이썬버전<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 가상환경 호출 : conda activate 가상환경_이름<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 가상환경 해제 : conda deactivate<br>
+        <br><br>
+
+       
+    * 7-2 강 : File / Exception / Log Handling
+        * Exception - 시퀀스 자료형으로 문자형 data를 메모리에 저장 <br>
+        &nbsp; - &nbsp;종류 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 예상 가능한 예외<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 발생여부를 사전에 인지할 수 있는 예외<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 예를 들어서 사용자의 잘못된 입력, 파일 호출 시 파일 없음 등과 같은 상황<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; 개발자가 if나 except를 통해서 예외처리를 해줘야 한다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 예상이 불가능한 예외<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 인터프리터 과정에서 발생하는 예외, 개발자 실수, 논리적 오류 등<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 예를 들어서 리스트의 범위를 넘어가는 index에 접근한다거나 어떤수를 정수 0으로 나누는 행위<br>
+        &nbsp; - &nbsp;예외처리(Exception Handling)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; try ~ except 문법 사용<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; try 범위 안에는 예외 발생 가능한 코드를 넣고 except 범위에는 예외 발생시 대응하는 코드를 넣으면 된다. 이때 (except exception type)과 예외 타입을 정해줄 수 있고 이때는 해당 예외 발생시 예외처리 코드를 수행한다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; try ~ except  ~ else 문법 사용<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; try ~ except에 else를 추가한 구문으로 예외가 발생하지 않았을 경우 else부분의 코드가 실행된다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; try ~ except  ~ finally 문법 사용<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; try ~ except에 finally를 추가한 구문으로 예외가 발생여부와 상관없이 실행되는 코드부분이다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; raise 예외 타입<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 강제로 exception을 발생.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; assert 예외조건<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 특정 조건에 만족하지 않을 경우 예외 발생<br><br>
+
+        * File Handling<br>
+        &nbsp; - &nbsp;open : 파일 처리를 위한 함수로 읽기/쓰기/추가 모드가 있다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 일반적으로 open을 하여 사용한 다음 마지막에 close를 통해서 닫아줘야 한다. 이 과정이 귀찮다면 with구문과 함계 open을 사용하면 된다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; with 구문이란 - 주말에 찾아보기 ㅎㅎ<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; read() : 파일 전체의 데이터를 읽어들인다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; readline() : 파일 1줄을 읽어들인다.(개행전까지)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 쓰기모드 때 encoding 형식을 지정 해줄 수 있다.<br>
+        &nbsp; - &nbsp;Pickle<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 파이썬의 객체를 영속화하는 built-in 객체이다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; RCE(Remote Code Execute)공격이 가능하므로 인터넷으로 모르는 사람의 pickle을 다운받을때 조심하도록 해야 한다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[pickle_취약점](https://watchout31337.tistory.com/167)<br>
+        <br><br>
+
+        * Logging Handling<br>
+        &nbsp; - &nbsp;로그를 남기는 이유 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 프로그램이 실행되는 동안 일어나는 정보를 기록함으로써 문제 발생시 참고할 수 있는 자료로 유용하게 쓰일 수 있다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 로그 기록은 실행시점에 남겨야 하는 기록과 개발시점에서 남겨야하는 기록으로 나눠진다.<br>
+        &nbsp; - &nbsp;로그 레벨 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; DEBUG -> INFO -> WARNING -> ERROR -> CRITICAL 순서대로 레벨이 낮아진다(낮을수록 유저도 알아야하는 정보에 가깝다).<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; logging.StreamHandler는 log level이 warning으로 설정이 되어있다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 셋팅된 레벨이하의 로그들을 출력해 준다. 아래의 예시는 기본레벨 셋팅으로 되어있다.<br>
+        
+	<p align='center'><img src = "./img/log_level.png" width="350px"></p>
+
+        
+    <br><br>
+
+    * 정보 설정하기(프로그램 옵션 설정하기)<br>
+        &nbsp; - &nbsp;configparser<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 프로그램의 실행 설정을 file에 저장한다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Section, Key, Value값의 형태로 설정된 파일을 사용<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 설정파일을 Dict Type으로 호출후 사용<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; configparser 모듈을 이용한다.<br>
+
+        * argparser<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; console창에서 프로그램 실행시 setting정보를 저장한다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Command-Line Option이라고 부름<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; argparse 모듈을 사용한다.<br>
+        <img src='./img/argparser.png'>
+        <br><br>
 
 <br><br>
 
 ### 2. 과제 수행 과정 / 결과물 정리
-<br>
-
-#### 어제 선택과제 1번에서 궁금했던 내용에 대해서 피어세션에 질문을 하였고 그 당시 상황에서는 어느 정도 이해가 되었지만 개념 및 내용에 대한 정리를 제대로 되지 않은 것 같다. 막상 오피스아워 끝나고 다시 해보려고 했는데 왜 이렇게 해야 되는 거지? 라는 의문이 생겨 개념부터 다시 공부할 생각이다. 
 
 
 <br><br>
 
 
-### 3. 피어세션 정리
-
-20210806 피어세션</br></br>
-
-🔍[오늘 질문]</br></br>
-
-Stochastic 선택과제 1번 → 그래프를 플랏팅할 경우 진동이 생긴다. 그 이유는?</br>
-Plotting한 값이 Error값이였다.</br>
-Broadcasting에 의한 shape차이로 인해서 잘못된 결과값이 올라왔다.,</br></br>
-RNN BackPropagation 선택과제 2번 → Wx, Wrec을 한 번 뒤로 갈 때마다 더해주는 이유는?</br>
-학습 가능한 파라미터에 대한 손실 함수의 Gradient는 각 Layer의 파라미터의 Gradient를 더해서 구할 수 있다고 </br>한다.</br></br>
-📒 [매주 금 - 새로 습득한 정보에 대한 공유]
-</br>
-캠퍼A님 → 정규표현식에 대한 알아보기 (전화번호 찾기)</br>
-</br>
-Level 1</br>
-[] → [] 사이에 포함된 문자들 매칭</br>
-→ 범위를 나타낸다(ex, 가-힣). 더불어 이러한 범위는 아스키코드상의 순서를 나타낸다.</br></br>
-Level 2</br>
-{} → 앞의 글자 또는 패턴의 반복 횟수를 지정</br>
-? → 앞의 글자 또는 패턴이 한 번 나오거나 안나오거나</br>
-| → '또는'의 의미</br>
-^ → 시작 문자 혹은 not을 의미한다.</br>
-$ → 종료 문자를 의미</br>
-() → 그룹을 만들어준다.</br></br>
-Level 3</br>
-\d & \D → \d는 숫자를 찾는 단축문자이고 D는 그 반대이다.</br>
-\w & \W → \w는 영문자. 숫자, _를 찾는 단축문자, W는 w의 반대이다.</br>
-\s & \S → \s는 공백을 나타내며, S는 s의 반대이다.</br>
-. → 개행 문자를 제외한 모든 문자와 매치</br>
-* → 앞에 있는 글자 또는 패턴을 0회 이상 반복</br>
-+ → 앞에 있는 글자 또는 패턴을 1회 이상 반복</br></br>
-추가</br>
-[]로 잡아주면 아스키코드의 값을 토대로 찾아주며 만약 반대로 순서를 넣어주면 에러가 발생한다.</br>
-유니코드 역시 가능하다.</br></br>
-캠퍼B님! - 특이값 분해</br>
-
-https://jjonhwa.github.io/booststudy/2021/08/06/booststudy-plus-Singular_Value_Decomposition(특이값_분해)/
- 
- </br></br>
-
-
-
-### 4. 학습 회고
+### 3. 학습 회고
 
 #### 강의 내용을 요약하면서 여러 생각이 들었다. 내가 진도를 빨리 가는것에만 집중하고 있지 않았나? 내가 강의를 통해서 배운게 뭐지? 그 강의 내용에 대해서 내가 설명할 수 있나? 등에 대해서 고민을 해보았고 결국 내 스스로 진도를 빨리 나가는 것에만 생각하고 정작 그 강의를 통해서 무얼 배웠고 알았는지에 대해서는 전혀 발전이 없었다. 오히려 강의를 애매하게 이해해서 원래 알고 있던 개념만 더 흔들릴 뿐이었다. 그래서 다음주부터는 주말에 강의를 듣더라도 강의 내용 정리를 통해서 내가 오늘 들었던 강의 내용을 잘 소화했는지 체크하며 공부할 것이다.
 <br>

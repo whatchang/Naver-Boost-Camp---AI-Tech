@@ -210,7 +210,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ☆ 가능도 함수는 모수 𝜃를 따르는 분포가 X를 관찰할 가능성을 뜻하지만 확률로 해석하면 안된다. -> 𝜃에 따른 대소비교 하는 용도이다. (->??? 뭔 말이지? ) __이 부분 다시 공부하기__  &nbsp; <br><br>
         &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 데이터 집합 X가 독립적으로 추출되었을 경우 로그가능도를 최적화한다.<br>
         <img src='./img/log_likelihood.png'>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 위의 수식에서 로마숫자 2랑 비슷한 기호를 파이라고 부르며 각 요소를 곱한다는 의미이다.<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 위의 수식에서 파이랑 비슷한 기호를 프로덕트라고 부르며 각 요소를 곱한다는 의미이다.<br><br>
         &nbsp;&nbsp;&nbsp;&nbsp; ☆ &nbsp; __여기서 의문점 : 왜 로그가능도를 사용하는 것일까?__<br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp;로그가능도를 최적화하는 모수 𝜃는 가능도를 최적화하는 MLE가 된다.(<- 왜??? 뭐징???)  __이 부분 다시 공부하기__ <br>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 데이터의 숫자가 적으면 상관없지만 만일 데이터의 숫자가 수억 단위가 된다면 컴퓨터의 정확도로는 가능도를 계산하는 것은 불가능해집니다. <- __사용 이유__ <br>
