@@ -1,4 +1,5 @@
-# Day 5 
+# Day 3 ( Python basic for AI 4강 ~ 5강 / AI Math 7 ~ 9 강)
+
 ## 목차 
 
 1. [강의 내용 정리](#1-강의-내용-정리)
