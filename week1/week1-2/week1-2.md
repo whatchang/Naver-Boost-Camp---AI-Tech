@@ -108,94 +108,126 @@
         &nbsp; - &nbsp; save, load : .npy(pickle 형태)로 저장, .npy 확장자 파일을 읽어옴<br>
         <br><br>
 
-    * 7-1 강 : Module and Project
-        * Module<br>
-        &nbsp; - &nbsp;프로그램에서 특정 기능을 수행하는 작은 단위(개인적인 생각)<br>
-        &nbsp; - &nbsp;모듈화를 통해서 재사용성을 높일 수 있다.<br<br>
+    * 7-1 강 : Pandas 1
+        * pandas란?<br>
+        &nbsp; - &nbsp; 구조화된 데이터의 처리를 지원하는 python 라이브러리<br>
+        &nbsp; - &nbsp; 초기에는 panel data를 많이 처리하는데 사용이 되었고 그래서 pan + da + s가 되었다고 한다.<br>
+        &nbsp; - &nbsp; nummpy와 통합하여 강력한 '스프레드시트'처리 기능을 제공<br>
+        &nbsp; - &nbsp; 아래는 데이터프레임에 대한 용어이다.<br>
+        <img src='./img/pandas.png'>
+        <br><br>
 
             
-       * 패키지<br>
-        &nbsp; - &nbsp;모듈을 모아놓은 단위, 하나의 프로그램<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 패키지 구현시 폴더별로 __ init __ .py 만들고 안에 __ all__ 맨글링으로 사용할 하위 모듈(디렉토리) 이름 리스트와 'from . import 모듈 이름' 넣어준다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; ex)<br>
-        ![make_pakage](./img/make_pakage.png)
-        <br>
+       * series<br>
+        &nbsp; - &nbsp;column vector를 표현하는 object -> series가 모이면 dataframe이 된다.<br>
+        &nbsp; - &nbsp; Series생성시 index 이름을 지정해 줄 수 있다. <br>
+        &nbsp; - &nbsp; dictionary형태를 Series값으로 주면 key가 index가 되고 value가 값이 된다. <br>    
 
-        * 가상환경<br>
-        &nbsp; - &nbsp;프로젝트 진행 시 필요한 패키지만 설치하는 환경 <br>
-        &nbsp; - &nbsp;anaconda로 가상환경 만들고 사용하는 법<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 생성 : conda create -n 가상환경_이름 파이썬버전<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 가상환경 호출 : conda activate 가상환경_이름<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 가상환경 해제 : conda deactivate<br>
+        * dataframe<br>
+        &nbsp; - &nbsp; series를 모아서 만든 data table <br>
+        &nbsp; - &nbsp; indexing<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; loc(index location) 방법 : index 이름을 가지고 원하는 index를 찾는 방식<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; ex) 아래와 같을때 s.loc[:3]하면 처음부터 index 이름이 3인것까지 선택을 한다.<br>
+        <p align='center'><img src='./img/pandas_loc.png' width=400></p>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; iloc(index position) 방법 : index의 번호를 통해서 원하는 원소를 필터링한다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; ex) 위와 같은 Series s에 s.iloc[:3]을 해주면 index 0~2까지인 index name 49 48 47이 선택된다.<br>
+        <br><br>
+
+        * selection & drop<br>
+        &nbsp; - &nbsp; Boolean index : True or False를 통해서 값을 선택함<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; ex) account_series라는 series에서 account_serires[account_serires<250000]를 하면 원소 중에서 250000보다 작은 값만 선택된다.<br>
+        &nbsp; - &nbsp; 다음은 column과 index를 선택하는 기본, loc, iloc 방법이다. <br>
+        <img src='./img/pandas_selection.png'>
+        <br><br>
+
+        * dataframe operations<br>
+        &nbsp; - &nbsp; series operation<br>
+        <img src='./img/series_operation.png'>
+        &nbsp; - &nbsp; dataframe operation<br>
+        <img src='./img/dataframe_operation.png'>
+        &nbsp; - &nbsp; series + dataframe<br>
+        <img src='./img/series_dataframe.png'>
+        &nbsp; - &nbsp; 아래는 데이터프레임에 대한 용어이다.<br>
+        <br><br>
+
+        * lamda, map, apply, replace<br>
+        &nbsp; - &nbsp; map<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; pandas의 series type의 데이터에서도 map 함수를 사용할 수 있다. -> series object.map()<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; function 대신 dict, sequence형 자료등으로 대체 가능<br>
+        &nbsp; - &nbsp; replace<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; map함수의 기능중 데이터 변환 기능만 담당<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 데이터 변환시 많이 사용되는 함수<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 예시) <br>
+        <img src='./img/replace.png'>
+        <br><br>
+
+        &nbsp; - &nbsp; apply<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; map과 달리, series 전체에 해당 함수를 적용<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 입력 값이 series 데이터로 입력 받아 handling 가능<br>
+
+       * pandas 내장 함수<br>
+        &nbsp; - &nbsp; describe : Numeric type 데이터의 요약 정보를 보여준다.<br>
+        &nbsp; - &nbsp; unique : series data의 유일한 값을 list를 반환함<br>
+        &nbsp; - &nbsp; sum, mean, min, max, count, median, mad, var 등 : 기본적인 column 또는 row 값의 연산을 지원<br>
+        &nbsp; - &nbsp; isnull : column 또는 row값의 NaN 값의 index를 반환함<br>
+        &nbsp; - &nbsp; sort_values : column값을 기준으로 데이터를 sorting<br>
+        &nbsp; - &nbsp; correlation & covariance<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 상관계수와 공분산을 구하는 함수<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; corr, cov, corrwith<br>
         <br><br>
 
        
-    * 7-2 강 : File / Exception / Log Handling
-        * Exception - 시퀀스 자료형으로 문자형 data를 메모리에 저장 <br>
-        &nbsp; - &nbsp;종류 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 예상 가능한 예외<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 발생여부를 사전에 인지할 수 있는 예외<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 예를 들어서 사용자의 잘못된 입력, 파일 호출 시 파일 없음 등과 같은 상황<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; 개발자가 if나 except를 통해서 예외처리를 해줘야 한다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 예상이 불가능한 예외<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 인터프리터 과정에서 발생하는 예외, 개발자 실수, 논리적 오류 등<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 예를 들어서 리스트의 범위를 넘어가는 index에 접근한다거나 어떤수를 정수 0으로 나누는 행위<br>
-        &nbsp; - &nbsp;예외처리(Exception Handling)<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; try ~ except 문법 사용<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; try 범위 안에는 예외 발생 가능한 코드를 넣고 except 범위에는 예외 발생시 대응하는 코드를 넣으면 된다. 이때 (except exception type)과 예외 타입을 정해줄 수 있고 이때는 해당 예외 발생시 예외처리 코드를 수행한다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; try ~ except  ~ else 문법 사용<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; try ~ except에 else를 추가한 구문으로 예외가 발생하지 않았을 경우 else부분의 코드가 실행된다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; try ~ except  ~ finally 문법 사용<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; try ~ except에 finally를 추가한 구문으로 예외가 발생여부와 상관없이 실행되는 코드부분이다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; raise 예외 타입<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 강제로 exception을 발생.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; assert 예외조건<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 특정 조건에 만족하지 않을 경우 예외 발생<br><br>
+    * 7-2 강 : pandas 2
+        * groupby1 <br>
+        &nbsp; - &nbsp; split -> apply -> combine 과정을 거쳐 연산함<br>
+        &nbsp; - &nbsp; groupby ex) <br>
+        <p align='center'><img src='./img/groupby_ex.png' width=400></p>
+        &nbsp; - &nbsp; 계층적 index<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 두 개의 column으로 groupby를 할 경우, index가 두개 생성<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; unstack() : group으로 묶여진 데이터를 matrix 형태로 전환해준다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; swaplevel() : index level을 변경할 수 있다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; sum, mean, min, max같은 operation : index level을 기준으로 기본 연산을 수행<br>
 
-        * File Handling<br>
-        &nbsp; - &nbsp;open : 파일 처리를 위한 함수로 읽기/쓰기/추가 모드가 있다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 일반적으로 open을 하여 사용한 다음 마지막에 close를 통해서 닫아줘야 한다. 이 과정이 귀찮다면 with구문과 함계 open을 사용하면 된다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; with 구문이란 - 주말에 찾아보기 ㅎㅎ<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; read() : 파일 전체의 데이터를 읽어들인다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; readline() : 파일 1줄을 읽어들인다.(개행전까지)<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 쓰기모드 때 encoding 형식을 지정 해줄 수 있다.<br>
-        &nbsp; - &nbsp;Pickle<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 파이썬의 객체를 영속화하는 built-in 객체이다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; RCE(Remote Code Execute)공격이 가능하므로 인터넷으로 모르는 사람의 pickle을 다운받을때 조심하도록 해야 한다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[pickle_취약점](https://watchout31337.tistory.com/167)<br>
+        * groupby2 <br>
+        &nbsp; - &nbsp; groupby에 의해 split된 상태를 추출 가능함 <br>
+        &nbsp; - &nbsp; get_group : 특정 key값을 가진 그룹의 정보만 추출 가능<br>
+        &nbsp; - &nbsp; 추출된 group정보에는 세 가지 유형의 apply가 가능하다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Aggregation: 요약된 통계정보를 추출해준다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Transformation : 해당 정보를 변환해준다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Filtration : 특정 정보를 제거하여 보여주는 필터링 기능<br>
+
+        * case study<br>
+        &nbsp; - &nbsp; Data <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; dateutil 모듈을 활용, 시간과 데이터 종류가 정리된 통화량 데이터<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 자세한 내용은 ppt참고하기<br>
         <br><br>
 
-        * Logging Handling<br>
-        &nbsp; - &nbsp;로그를 남기는 이유 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 프로그램이 실행되는 동안 일어나는 정보를 기록함으로써 문제 발생시 참고할 수 있는 자료로 유용하게 쓰일 수 있다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 로그 기록은 실행시점에 남겨야 하는 기록과 개발시점에서 남겨야하는 기록으로 나눠진다.<br>
-        &nbsp; - &nbsp;로그 레벨 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; DEBUG -> INFO -> WARNING -> ERROR -> CRITICAL 순서대로 레벨이 낮아진다(낮을수록 유저도 알아야하는 정보에 가깝다).<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; logging.StreamHandler는 log level이 warning으로 설정이 되어있다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 셋팅된 레벨이하의 로그들을 출력해 준다. 아래의 예시는 기본레벨 셋팅으로 되어있다.<br>
+        * Pivot table Crosstab<br>
+        &nbsp; - &nbsp; 이 부분에 대해서도 ppt보면서 직접 실습하기. <br>
+        <br>
+
+        * Merge & Concat<br>
+        &nbsp; - &nbsp; Merge <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; SQL에서 많이 사용하는 Merge와 같은 기능<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 두 개의 데이터를 하나로 합침<br>
+        &nbsp; - &nbsp; join <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; right, left, full, inner join DB와 같음<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; index based join : 같은 index에 column을 (axis=1)쪽으로 추가<br>
+        &nbsp; - &nbsp; concat : 같은 형태의 데이터를 붙이는 연산작업 <br>
         
-	<p align='center'><img src = "./img/log_level.png" width="350px"></p>
-
+        * persistence<br>
+        &nbsp; - &nbsp; sqlite3 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; data loading시 db connection 기능을 제공<br>
+        &nbsp; - &nbsp; XLS <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; xls엔진으로 dataframe의 엑셀 추출 코드, openpyxls 또는 XlsxWrite 모듈 사용<br>
+        &nbsp; - &nbsp; pickle <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 가장 일반적인 python 파일 persistence<br>
         
-    <br><br>
-
-    * 정보 설정하기(프로그램 옵션 설정하기)<br>
-        &nbsp; - &nbsp;configparser<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 프로그램의 실행 설정을 file에 저장한다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Section, Key, Value값의 형태로 설정된 파일을 사용<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 설정파일을 Dict Type으로 호출후 사용<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; configparser 모듈을 이용한다.<br>
-
-        * argparser<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; console창에서 프로그램 실행시 setting정보를 저장한다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Command-Line Option이라고 부름<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; argparse 모듈을 사용한다.<br>
-        <img src='./img/argparser.png'>
-        <br><br>
 
 <br><br>
 
 ### 2. 과제 수행 과정 / 결과물 정리
+#### pandas 강의 듣고 정리하니까 시간을 다 써서 선택과제 남은것을 하지 못함 ㅠㅠ
 
 
 <br><br>
