@@ -1,4 +1,4 @@
-# Day 6 ( DL basic 3강 / Data Viz 2 강)
+# Day 6 DL basic 3강 
 
 ## 목차 
 
@@ -14,67 +14,129 @@
 ### 1. 강의 내용 정리
 
 * DL basic 3강
-    * 3강 : Historical Review
-        * 딥러닝의 주요 요소<br>
-        &nbsp; - &nbsp; 모델을 학습시킬 데이터 <br>
-        &nbsp; - &nbsp; 데이터를 통해서 학습시키고자 하는 모델 <br>
-        &nbsp; - &nbsp; 모델을 학습시키기 위한 loss function <br>
-        &nbsp; - &nbsp; loss function을 최소화시키기 위한 알고리즘 <br>
+    * 3강 : Optimization
+        * 주요 최적화 용어<br>
+        &nbsp; 1. &nbsp; Generalization <br>
+        <img src='./img/generlization.png'>
+        &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 위와 같이 test error와 train error의 차이를 generalization gap이라고 하고 generalization이 모델이 학습하지 않은 자료를 얼마나 잘 예측할 수 있는지를 말한다. <br>
+        <br>
+
+        &nbsp; 2. &nbsp; Under-fitting vs. over-fitting<br>
+        &nbsp;&nbsp; - &nbsp; under-fitiing : 학습이 잘 이루어지지 않는 상태<br>
+        &nbsp;&nbsp; - &nbsp; over-fitting : 학습이 과도하게 이루어진 상태 <- 주로 이 상태일때 train data에 대한 성능은 좋으나 test data에 대해서는 성능이 안 좋다 -> generalization gap이 크다고 말할 수 있따.<br>
+        <br>
+        &nbsp; 3. &nbsp; Cross validation <br>
+         &nbsp;&nbsp; - &nbsp; train data에서 일부를 평가하는데 사용하는 방식으로 대부분의 data를 학습시키는데 사용하고 20~30%정도 평가를 위해서 사용<br>
+        &nbsp;&nbsp; - &nbsp; K-fold : train data set을 k개의 뭉치로 나누고 k-1개로 학습을 시키고 남은 한 뭉치고 평가를 해본다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 조금 더 알아보기 - > k-fold 방식은 k개로 나눕니다. 이렇게 만들어진 뭉치를 fold라고 합니다. 각 fold에 대해서 다시 k개로 분할을 시킵니다. 이때 생긴 뭉치를 split이라고 하겠습니다. fold 1 ~ 5까지 순차적으로 학습을 하는데 이때 validation하는 위치를 바꿔줍니다. 예를 들면 fold 1에서는 split 1이 validation역할을 하고 fold 2에서는 split 2, ... fold 5에서는 split 5가 validation 역할을 수행해 줍니다. 이때 각 fold에서는 validation을 평가하기 위한 모델을 만들고 validation - 예측값을 통해 error를 계산해 줍니다. 이런식으로 반복을 한 후 error들의 평균으로 최적의 모델을 찾습니다. <br>
+        <p align='center' style="background-color:powderblue;"><img src='./img/k_fold.png' width='500' height='300' ></p>
+        &nbsp;&nbsp;&nbsp;&nbsp; -> &nbsp; 이와 같은 방식은 성능은 좋게 나오나 일반적인 학습방법에 비해 시간이 많이 소요됩니다.<br>
+
+        [조금 더 알아보기 참고 사이트1](https://hanawithdata.tistory.com/entry/Cross-Validation-%EA%B5%90%EC%B0%A8%EA%B2%80%EC%A6%9D-%EC%9D%B4%EB%9E%80)<br>
+        [조금 더 알아보기 참고 사이트2](https://nonmeyet.tistory.com/entry/KFold-Cross-Validation%EA%B5%90%EC%B0%A8%EA%B2%80%EC%A6%9D-%EC%A0%95%EC%9D%98-%EB%B0%8F-%EC%84%A4%EB%AA%85)
+        <br>
+
+        &nbsp; 4. &nbsp; Bias-variance tradeoff <br>
+        &nbsp;&nbsp; - &nbsp; variance : 출력이 얼마나 일괄적인가? (낮을수록 일괄적이다.)<br>
+        &nbsp;&nbsp; - &nbsp; bias : 평균적으로 봤을때 원하는 답과 비슷한가? (낮을수록 원하는 답과 비슷하다.)<br>
+        &nbsp;&nbsp; => &nbsp; variance와 bias가 낮은게 좋다. 그 다음 bias는 높더라도 variance가 낮은게 좋다. 왜냐하면 군집되어있는 곳만 잘 학습시켜서 바꿔주면 되기 때문이다(사격으로 예시를 들면 탄착군이 중앙보다 위에 있더라도 다음번에는 좀 더 아래로 쏘면 탄착군이 중앙으로 이동할 확률이 크기 때문).<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; Bias and variance tradeoff : noise가 있을때 cost를 줄이기 위해서 bias, variance를 낮출때 둘 다 줄어들지는 않는다. 하나가 줄어들면 다른 하나가 커진다. <br>
+        <img src='./img/tradeoff.png'>
+        <br><br>
+
+        &nbsp; 5. &nbsp; Bootstrapping <br>
+        &nbsp;&nbsp; - &nbsp; 학습 데이터를 가지고 여러 모델을 만들고 동일한 여러 모델에 동일한 input을 주었을때 결과의 일관성 정도를 확인<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 조금 더 알아보기 <br>
+            
+            The Adventures of Baron Munchausen(바론의 대모험)이라는 책을 보면 주인공 바론이 늪에 빠지게 되는데 이때 자신의 장화 끝 단(bootstrap)을 잡아 올라 스스로 늪에서 빠져나오는 장면이 나온다. 사실 작용 반작용의 법칙에 따라 불가능한 일이지만 논리는 차치하고, 이 일화처럼 스스로를 구해낸다는 뜻으로 bootstrap이라는 단어가 사용되었다.
+
+            Bootstrap sampling 사용하는 이유
+            Bootstrap sampling을 하면 애초에 한 개 밖에 없었던 우리들의 sample data set을 n개의 sample data set을 가지고 있는 것과 같은 효과를 누릴 수 있게 한다. 이를 통해 우리는 data의 variance를 상당히 잘 근사 할 수 있는 결과를 볼 수 있다.
+
+             Bootstrap sampling을 하는 방법은 매우 간단하다. N개의 sample data를 가지고 있을 때 1000개의 bootstrap samples를 만들고자 하면, 복원 추출을 N번 실행하여 새로운 sample data set을 만들고 이 작업을 1000번 반복하면 된다.
+
+         [조금 더 알아보기 인용 사이트1](https://modern-manual.tistory.com/31)
+        <br>
+
+        &nbsp; 6. &nbsp; Bagging and boosting <br>
+        &nbsp;&nbsp; - &nbsp; bagging : 여러 모델의 output을 이용<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 조금 더 알아보기<br>
+
+            배깅의 풀네임은 Bootstrap aggregating 입니다. 말 그대로 부트스트랩(Bootstrap)을 통해서 다양한 데이터셋을 만들고 이를 학습시킨 모델을 모으는(Aggregating) 방법입니다. 
+
+            bootstrap과 같이 복원추출에 경우 선택되지 않은 data가 존재할 수 있다. 이것을 OOB(Out Of Bag)라고 하며 공식은 다음과 같습니다.
+
+                                        p=(1−1N)N
+            N 이 커질수록 아래의 식에 의해서 이 값은 약 37% 정도에 가까워집니다
+        <p align='center'><img src='./img/oob.png'></p>
+
+            부트스트랩은 데이터의 분포를 변형하는 효과가 있습니다. 원래 데이터의 노이즈 ϵ 가 특정 분포를 따르고 있다면 이를 통해 만드는 모델은 분포에 종속될 수 밖에 없는데요. 부트스트랩을 통해 분포를 다양하게 만들어 주면 특정 분포에 종속된 모델이 만들어지는 것을 방지함으로써 다양성을 확보할 수 있습니다.
+
+            게다가 OOB 데이터를 검증에 사용하면 모든 샘플을 학습과 검증에 활용하여 높은 검증력을 확보할 수 있다는 효과도 있습니다.  
+
+            learning, result aggreating 등 이후 여러 내용에 대해서는 생략하도록 하겠습니다.
+
+        [조금 더 알아보기 인용 사이트1](https://yngie-c.github.io/machine%20learning/2021/03/19/bagging/)<br>
+        [조금 더 알아보기 인용 사이트2](https://gggggeun.tistory.com/29)<br>
+        [조금 더 알아보기 인용 사이트3](https://m.blog.naver.com/biomath2k/221869229383)
+        <br>
+
+        &nbsp;&nbsp; - &nbsp; boosting : 처음 모델이 해결하지 못하는 문제에 대하여 이후 모델을 이용하는 연속적인 방식<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 조금 더 알아보기<br>
+
+            일단 첫 번째 약한 모델이 학습 결과를 내놓으면 이를 바탕으로 오답 노트를 만듭니다. 두 번째 모델은 오답 노트를 바탕으로 공부하게 되며 이런 과정을 계속 반복하게 됩니다. 이와 같이 순차적으로 진행되기 때문에 병렬 처리(Parallel processing)가 불가능하다는 단점을 가지고 있습니다. 다만 Stump tree(결정 경계를 하나만 형성하는 의사 결정 나무)와 같은 약한 모델을 기반으로 하므로 결정 경계가 없어도 복잡도가 높은 모델을 사용하는 배깅보다 빠르게 학습이 진행되곤 합니다.
+
+        [조금 더 알아보기 인용 사이트1](https://yngie-c.github.io/machine%20learning/2021/03/20/adaboost/)<br>
+        [조금 더 알아보기 참고 사이트1](https://tyami.github.io/machine%20learning/ensemble-3-boosting-AdaBoost/)
+
+
         &nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; 이러한 4가지 관점을 토대로 논문 혹은 연구를 본다면 이전 논문과 연구에 비해 어떤 장점이 있고 어떤 부분에 기여를 했는지 알 수 있다. <br>
         <br>
-        * Data -> 풀고자 하는 문제에 따라 다르다.<br>
-        &nbsp; - &nbsp; Classification : 분류 문제 <br>
-        &nbsp; - &nbsp; sematic segmentation : 이미지 픽셀 별로 구별하는 문제 <br>
-        &nbsp; - &nbsp; Detection : 바운딩 박스를 찾을려고 하는 문제<br>
-        &nbsp; - &nbsp; Pose estimation : 이미지에 있는 사람의 3차원, 2차원 스켈레톤 정보 <br>
-        &nbsp; - &nbsp; Visual QnA : 이미지와 질문을 주고 답을 구하도록 하는 것 <br>
-        <br>
+    * Gradient descent 방식<br>
+         &nbsp; 1. &nbsp; Stocahstic gradient descent<br>
+         &nbsp;&nbsp; - &nbsp; 확률적 경사하강법으로 개념적으로는 iter당 1개의 data를 가지고 경사를 구하고 파라미터를 학습시킨다.<br>
+         <br>
 
-        * Model -> 데이터를 주어졌을때 문제를 해결하기 위한 알고리즘<br>
-        <br>
+         &nbsp; 2. &nbsp; Momentum<br>
+         &nbsp;&nbsp; - &nbsp; b(beta)라는 하이퍼 파라미터(momentum)를 두고 이것과 현재의 gradient, accumulation을 활용하여 가중치를 업데이트를 한다.<br>
+         <p align='center'><img src='./img/momentum.png' width=350></p>
+         <br>
 
-        * Loss -> 모델과 데이터가 정해져 있을때 어떻게 학습시킬지에 대한(업데이트 할지) 기준<br>
-        <img src='./img/loss.png'>
-        &nbsp; - &nbsp; MSE <- 회귀문제에서 사용 <br>
-        &nbsp; - &nbsp; CE <- 분류문제에서 사용 <br>
-        &nbsp; - &nbsp; MLE <- 확률문제에서 사용 <br>
-        <br>
+         &nbsp; 3. &nbsp; Nesterov accelerated gradient<br>
+         &nbsp;&nbsp; - &nbsp; momentum과 비슷하지만 at+1을 구할때 mometum과 다르게 한 번 이동하고 거기서 계산한 gradient를 이용한다.<br>
+         <p align='center'><img src='./img/NAG.png'></p>
+         <br>
 
-        * optimization 알고리즘 -> 데이터와 모델, loss function이 주어져있을때 네트워크를 어떻게 줄일지에 대한 것<br>
-        &nbsp; * &nbsp; optimization 알고리즘 + 아래와 같은 방식을 사용하여 -> 학습되지 않은(test data)를 잘 예측하도록 만들어줌 <br>
-        &nbsp; - &nbsp; Dropout, Early stopping, k-fold validation, weight decay, batch normalization, mixup, ensemble, bayesian optimization <br>
-        <br>
+         &nbsp; 4. &nbsp; Adagrad<br>
+         &nbsp;&nbsp; - &nbsp; 적게 변한 파라미터는 많이 변화시켜주고 많이 변한 파라미터는 적게 변화시켜준다. <- 이러한 역할을 하는게 밑에 그림의 G(모든 gradient의 제곱의 합)이다. 그래서 gradient가 작다면 적게 변한 것이고 크다면 많이 변한 것이다. 그리고 이 값을 분모에 넣어주기 때문에 많이 변할수록 적은 변화만 생긴다.<br>
+         &nbsp;&nbsp; - &nbsp; 아래와 같이 Gt는 시간이 지날수록(gradient를 계산하면 할수록) 커지므로 일정 시간이 지나면 분모가 무한대가 되어 변화가 없어진다.<br>
+         <p align='center'><img src='./img/adagrad.png'></p>
+         <br><br>
 
-        * Historical review<br>
-        &nbsp; - &nbsp; 2012 - AlexNet <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 이전 이미지넷 대회는 주로 고전적인 머신러닝들이 1등을 했는데 이때부터 딥러닝기술들이 1등을 차지했다.&nbsp; <br>
-        <br>
-        &nbsp; - &nbsp; 2013 - DQN <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 딥마인드가 만든 강화학습 논문&nbsp; <br>
-        <br>
-        &nbsp; - &nbsp; 2014 - Encoder / Decoder <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 단어의 연속이 주어졌을때 다른 언어 단어의 연속으로 변화해주는 방법 -> 이 seq2seq가 transformer에 큰 영향을 주었다.&nbsp; <br>
-        <br>
-        &nbsp; - &nbsp; 2014 - Adam Optimizer <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 최적화를 위해서 Adam을 사용하는데 왜 사용할까? -> Adam을 적용하지 않고 다른 방식으로 최적화 파라미터를 구하기 위해서는 매우 많은 양의 gpu가 필요하다. So 그만한 자원이 없는 사람은 adam(이것을 사용하면 왠만하면 결과가 잘 나온다.)을 사용하므로써 무난하게 성능을 높이려고 해서 사용한다.&nbsp; <br><br>
-        &nbsp; - &nbsp; 2015 - Generative Adversarial Network <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 이미지를 어떻게 만들 수 있을지에 대해서 설명을 한다. -> 간단하게 말하면 network가 Generator와 Discriminator를 만들어서 학습을 시킨다.<br>
-        <br>
-        &nbsp; - &nbsp; 2015 - Residual Networks <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 이 연구 덕분에 딥러닝이 딥러닝이 가능해졌다. -> 이전보다 더 깊게 네트워크를 쌓더라도 성능이 괜찮게 나올 수 있는 방법론 제시 <br>
-        <br>
-        &nbsp; - &nbsp; 2017 - Transformer <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; nlp뿐만 아니라 CNN에 대해서도 큰 영향을 준 논문이다. <br>
-        <br>
-        &nbsp; - &nbsp; 2018 - BERT(fine-tuned NLP models) <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 풀고자 하는 문제에 대한 데이터가 별로 없더라도 다양한 말뭉치를 통해서 좋은 결과는 내는 방법에 대한 논문<br>
-        <br>
-        &nbsp; - &nbsp; 2019 - BIG Language Models(GPT) <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; fine-tuning을 통해서 문장, 프로그램, 표 등의 시퀀스 데이터를 만들어 낸다. <br>
-        <br>
-        &nbsp; - &nbsp; 2020 - Self Supervised Learning <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 학습데이터 외에 label을 모르는 데이터를 가지고 학습을 하여 좋은 결과를 낼 수 있게 만드는 논문 <br>
-        <br>
+         &nbsp; 5. &nbsp; Adadelta<br>
+         &nbsp;&nbsp; - &nbsp; adagrad에서 Gt가 커지는 현상을 막기 위해 만들어진 방법<br>
+         &nbsp;&nbsp; - &nbsp; G를 구할 때 합을 구하는 대신 지수평균을 구한다. 이때 RMSprop과 다르게 step size를 단순하게 η 로 사용하지 않고 대신 step size의 변화값의 제곱을 가지고 지수평균 값을 사용한다.<br>
+         &nbsp;&nbsp; - &nbsp; 이때 Gt를 구할때 r은 learning rate가 아니다. ??? <- 그런데 코드에서는 다음과 같이 learning rate 값을 준다. 뭐징??<br>
+         <img src='./img/adadelta.png'>
+         [Adadelta 추가 정보 사이트1](http://shuuki4.github.io/deep%20learning/2016/05/20/Gradient-Descent-Algorithm-Overview.html)<br>
+         [지수평균식 정보 사이트1](https://wooono.tistory.com/225)<br>
+         [adadelta 코드에 대한 사이트](https://twinw.tistory.com/247)<br>
+         [위의 문제를 해결하는데 도움을 줄 것 같은 사이트](https://dev-jm.tistory.com/10)
+         <br><br>
+
+         &nbsp; 6. &nbsp; RMSprop<br>
+         &nbsp;&nbsp; - &nbsp; adadelta와 비슷하지만 가중치를 업데이트 시켜줄때 stepsize를 이용한다.<br>
+         &nbsp;&nbsp; - &nbsp; 이때 stepsize가 learning rate이다.<br>
+         <br>
+
+         &nbsp; 7. &nbsp; Adam<br>
+         &nbsp;&nbsp; - &nbsp; momentum과 EMA, 에타(stepsize, 𝜂), 입실론(𝜖)등을 이용하여 업데이트를 해준다.<br>
+         <img src='./img/adam.png'>
+         [추가로 보면 좋을 것 같은 사이트1](https://hiddenbeginner.github.io/deeplearning/2019/09/22/optimization_algorithms_in_deep_learning.html#Adam)
+         [추가로 보면 좋을 것 같은 사이트2](https://dalpo0814.tistory.com/29)
+         <br><br>
+
+
 
     
 
