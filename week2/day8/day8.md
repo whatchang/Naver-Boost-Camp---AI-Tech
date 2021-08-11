@@ -1,4 +1,4 @@
-# Day 6 DL basic 3강 
+# Day 6 DL basic 4~6강 
 
 ## 목차 
 
@@ -13,8 +13,8 @@
 
 ### 1. 강의 내용 정리
 
-* DL basic 3강
-    * 3강 : Optimization
+* DL basic 4~6강
+    * 4강 : Optimization
         * 주요 최적화 용어<br>
         &nbsp; 1. &nbsp; Generalization <br>
         <img src='./img/generlization.png'>
@@ -115,10 +115,8 @@
 
          &nbsp; 5. &nbsp; Adadelta<br>
          &nbsp;&nbsp; - &nbsp; adagrad에서 Gt가 커지는 현상을 막기 위해 만들어진 방법<br>
-         <img src='./img/adadelta2.png'>
          &nbsp;&nbsp; - &nbsp; G를 구할 때 합을 구하는 대신 지수평균을 구한다. 이때 RMSprop과 다르게 step size를 단순하게 η 로 사용하지 않고 대신 step size의 변화값의 제곱을 가지고 지수평균 값을 사용한다.<br>
-         &nbsp;&nbsp; - &nbsp; 이때 Gt를 구할때 r은 learning rate가 아니다. ??? <- 그런데 코드에서는 다음과 같이 learning rate 값을 준다. 뭐징?? <- 이 부분에 대해서 질문게시판에 올렸는데 한 캠퍼님께서 답을 달아주셨다.<br>
-         &nbsp;&nbsp; => &nbsp; Gt와 Ht로 이루어진 식이 learning rate를 대체한다 - 라는 의미로 사용자가 learning rate를 정해줄 수 없고 데이터에 의해서만 결정된다 - 라는 의미로 설명하신 것 같다라고 답을 작성해주셨다. <br>
+         &nbsp;&nbsp; - &nbsp; 이때 Gt를 구할때 r은 learning rate가 아니다. ??? <- 그런데 코드에서는 다음과 같이 learning rate 값을 준다. 뭐징??<br>
          <img src='./img/adadelta.png'>
          [Adadelta 추가 정보 사이트1](http://shuuki4.github.io/deep%20learning/2016/05/20/Gradient-Descent-Algorithm-Overview.html)<br>
          [지수평균식 정보 사이트1](https://wooono.tistory.com/225)<br>
