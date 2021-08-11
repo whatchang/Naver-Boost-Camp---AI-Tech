@@ -136,6 +136,44 @@
          [추가로 보면 좋을 것 같은 사이트2](https://dalpo0814.tistory.com/29)
          <br><br>
 
+    * Regularization : 주목적이 test data에서도 좋은 성능을 나오게 하기 위해서 학습을 방해하는 것<br>
+        &nbsp; 1. &nbsp; Early stopping <br>
+        &nbsp;&nbsp; - &nbsp; 일반적으로 학습을 많이 시키면 train error는 적게 나오지만 test error는 크게 나온다. 따라서 overfitting 되기 전에 학습을 멈추게 하는 방법이다. <br>
+        <br>
+
+        &nbsp; 2. &nbsp; Parameter norm penalty(Weight decay) <br>
+        &nbsp;&nbsp; - &nbsp;  네트워크 파라미터가 너무 커지지 않게 하기 위해 패널티를 줘서 일반성을 높여주는 방법이다.<br>
+        <br>
+
+        &nbsp; 3. &nbsp; Data augmentation <br>
+        &nbsp;&nbsp; - &nbsp; 데이터가 적을때는 XGBoost, Random Forest 등이 성능이 좋다. 하지만 데이터 수가 많아지면 Deep learning이 성능이 좋아진다(deep learning에서 많은 데이터에 대해서 표현할 수 있기 때문 <- 이 의미가 많은 데이터를 처리할 수 있는 파라미터를 학습시킬 수 있다 - 라는 의미이지 않을까 싶다). 이러한 점에서 적은양의 데이터를 추가적으로 만들어 주기 위해서 약간의 변화를 줘서 같은 레이블의 다른 데이터를 만들어 주는 방식<br>
+        &nbsp;&nbsp; - &nbsp;  예를 들어서 강아지 사진이 있을때 이 사진을 20도, 50도 180도로 돌려도 label은 강아지이다.<br>
+        <br>
+
+        &nbsp; 4. &nbsp; Noise robustness <br>
+        &nbsp;&nbsp; - &nbsp;  데이터에 노이즈를 집어넣어줘서 학습시키면 test성능이 좋게 나오게 하는 방식이다.<br>
+        &nbsp;&nbsp; - &nbsp; 이 방법이 왜 잘되는지에 대한 정확한 증명은 없다.<br>
+        <br>
+
+        &nbsp; 5. &nbsp; Label smoothing <br>
+        &nbsp;&nbsp; - &nbsp; 학습단계에서 train data를 2집단으로 뽑아서 이것을 섞어주는 방식이다.<br>
+        &nbsp;&nbsp; - &nbsp;  예를 들어서 아래와 같이 고양이와 개 사진을 합쳐서 학습시켜준다. 이때 label도 섞어진다.<br>
+        <img src='./img/label_smooting.png'><br>
+        <br>
+
+        &nbsp; 6. &nbsp; Dropout <br>
+        &nbsp;&nbsp; - &nbsp; 신경망 네트워크에서 일부 가중치를 0으로 해줘서 아래의 오른쪽과 같이 만들어준다.<br>
+        <img src='./img/dropout.png'><br>
+        <br>
+
+        &nbsp; 7. &nbsp; Batch normalization <br>
+        &nbsp;&nbsp; - &nbsp; 활성화함수의 활성화값 또는 출력값을 정규화하는 작업을 말한다. -> 신경망의 각 layer에서 데이터(배치)를 정규화하는 작업이다. <br>
+        &nbsp;&nbsp; - &nbsp; 배치 정규화를 활성화함수 이전에 하는지 이후에 하는지는 계속된 논의와 실험이 진행중이다.  <br>
+        &nbsp;&nbsp; - &nbsp; 일종의 노이즈를 추가하는 방법으로 이는 배치마다 정규화를 함으로써 전체 데이터에 대한 평균의 분산과 값이 달라질 수 있다.  <br>
+        [좀더 참고해서 볼 사이트1](https://sacko.tistory.com/44)<br>
+        [좀더 참고해서 볼 사이트2](https://eehoeskrap.tistory.com/430)<br>
+
+        <br>
 
 
     
