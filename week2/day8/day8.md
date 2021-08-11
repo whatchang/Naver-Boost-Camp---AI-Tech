@@ -5,7 +5,8 @@
 1. [강의 내용 정리](#1-강의-내용-정리)
 2. [과제 수행 과정 / 결과물 정리](#2-과제-수행-과정--결과물-정리)
 3. [피어세션 정리](#3-피어세션-정리)
-4. [학습 회고](#4-학습-회고)
+4. [흥미있던 질문들](#4-흥미있던-질문들)
+5. [학습 회고](#5-학습-회고)
 
 
 
@@ -14,166 +15,136 @@
 ### 1. 강의 내용 정리
 
 * DL basic 4~6강
-    * 4강 : Optimization
-        * 주요 최적화 용어<br>
-        &nbsp; 1. &nbsp; Generalization <br>
-        <img src='./img/generlization.png'>
-        &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 위와 같이 test error와 train error의 차이를 generalization gap이라고 하고 generalization이 모델이 학습하지 않은 자료를 얼마나 잘 예측할 수 있는지를 말한다. <br>
+    * 4강 : Convolutional Neural Networks
+        * convolution 기본<br>
+        &nbsp; - &nbsp; convolution 연산 <br>
+        <img src='./img/cnn_basic1.png'>
+        &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 커널(filter)을 image에 convolution 연산을 통해 output이 만들어 진다. 이때 output의 (i-k+2p)/s + 1이다(p는 padding, s는 stride를 뜻한다). <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 연산방법은 커널과 image를 element wise로 각각의 원소끼리 곱하고 결과를 다 더하면 된다. 이런식으로 stride로 지정된 크기만큼 이동하면서 하면 위의 결과에서 output과 같은 size의 결과가 나온다.  <br><br>
+        &nbsp; - &nbsp; RGB image convolution <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 아래와 같이 깊이(채널)이 생격다. 하지만 연산방법은 위와 동일하며 이런식의 계산 결과로 나온 값의 깊이는 1이 된다.<br>
+        <p align='center'><img src='./img/rgb1.png' width=350></p>
+        <br>
+        &nbsp; - &nbsp; Stack of Convolutions <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 아래 그림과 같이 32*32*3의 이미지에서 5*5*3 커널을 이용하면 28*28*1 이미지가 나온다 이때 각 원소에 Relu, 활성화 함수를 적용시켜주면 하나의 feature가 나오게 된다. 이것을 4번 해주면 가운데 모양처럼 깊이가 4인 feature가 나온다. <br>
+        <p align='center'><img src='./img/stack_of_convolutions.png' width=350></p>
+        &nbsp;&nbsp;&nbsp;&nbsp; Quiz. &nbsp; 위에서 첫번째 이미지에서 kernal(5*5*3)을 가지고 convolution연산을 할때(이때 그림과 맞찬가지로 출력의 채널은 4이다.) 몇개의 파라미터가 필요한가?<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; Answer. &nbsp; 5*5*3*4 이다.<br>
+        <br>
+        
+        * CNN<br>
+        &nbsp; - &nbsp; 일반적으로 CNN의 구성 요소 : convolution layer, pooling lyaer, fully connected layer <br>
+        &nbsp; - &nbsp; 최근에는 fully connected layer부분 말고 다른 방식을 사용하여 파라미터의 개수를 줄이고자 한다. <- 정확하게는 layer은 deep하지만 파라미터 개수는 적은 방식을 이용 <br>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; Deep learning에서 학습시켜야할 파라미터가 많으면 많을수록 학습이 어렵고 generaliztion performance가 떨어진다.<br><br>
+        &nbsp; - &nbsp; stride : kernel을 몇칸씩 이동하면서 convolution을 시행하는지에 대한 것 <br>
+        <p align='center'><img src='./img/stride.png' width=350></p>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; padding : 가장자리에 채워주는 것 <-  input과 output의 special dimension을 똑같게 만들어주기 위해 사용(special dimension이란 input의 데이터를 말함.)<br><br>
+
+        * Exercise : AlexNet구조에서 파라미터 구하기 연습<br>
+
+        &nbsp; 1. &nbsp; 가장 오른쪽 화살표는 그 화살표 기준으로 왼쪽에서 convolution을 해서 오른쪽 output이 나온 것이다. 이때 필요한 파라미터의 개수를 구하시오. 대략적인 개수는 화살표 위의 숫자와 같습니다. <br>
+        <p align='center'><img src='./img/ex1.png'></p>
+        &nbsp; ->  &nbsp; 11 * 11 * 3 * 48 * 2(output이 위, 아래 2개 이므로)<br>
         <br>
 
-        &nbsp; 2. &nbsp; Under-fitting vs. over-fitting<br>
-        &nbsp;&nbsp; - &nbsp; under-fitiing : 학습이 잘 이루어지지 않는 상태<br>
-        &nbsp;&nbsp; - &nbsp; over-fitting : 학습이 과도하게 이루어진 상태 <- 주로 이 상태일때 train data에 대한 성능은 좋으나 test data에 대해서는 성능이 안 좋다 -> generalization gap이 크다고 말할 수 있따.<br>
-        <br>
-        &nbsp; 3. &nbsp; Cross validation <br>
-         &nbsp;&nbsp; - &nbsp; train data에서 일부를 평가하는데 사용하는 방식으로 대부분의 data를 학습시키는데 사용하고 20~30%정도 평가를 위해서 사용<br>
-        &nbsp;&nbsp; - &nbsp; K-fold : train data set을 k개의 뭉치로 나누고 k-1개로 학습을 시키고 남은 한 뭉치고 평가를 해본다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 조금 더 알아보기 - > k-fold 방식은 k개로 나눕니다. 이렇게 만들어진 뭉치를 fold라고 합니다. 각 fold에 대해서 다시 k개로 분할을 시킵니다. 이때 생긴 뭉치를 split이라고 하겠습니다. fold 1 ~ 5까지 순차적으로 학습을 하는데 이때 validation하는 위치를 바꿔줍니다. 예를 들면 fold 1에서는 split 1이 validation역할을 하고 fold 2에서는 split 2, ... fold 5에서는 split 5가 validation 역할을 수행해 줍니다. 이때 각 fold에서는 validation을 평가하기 위한 모델을 만들고 validation - 예측값을 통해 error를 계산해 줍니다. 이런식으로 반복을 한 후 error들의 평균으로 최적의 모델을 찾습니다. <br>
-        <p align='center' style="background-color:powderblue;"><img src='./img/k_fold.png' width='500' height='300' ></p>
-        &nbsp;&nbsp;&nbsp;&nbsp; -> &nbsp; 이와 같은 방식은 성능은 좋게 나오나 일반적인 학습방법에 비해 시간이 많이 소요됩니다.<br>
-
-        [조금 더 알아보기 참고 사이트1](https://hanawithdata.tistory.com/entry/Cross-Validation-%EA%B5%90%EC%B0%A8%EA%B2%80%EC%A6%9D-%EC%9D%B4%EB%9E%80)<br>
-        [조금 더 알아보기 참고 사이트2](https://nonmeyet.tistory.com/entry/KFold-Cross-Validation%EA%B5%90%EC%B0%A8%EA%B2%80%EC%A6%9D-%EC%A0%95%EC%9D%98-%EB%B0%8F-%EC%84%A4%EB%AA%85)
+        &nbsp; 2. &nbsp; 문제 내용 동일 <br>
+        <p align='center'><img src='./img/ex2.png'></p>
+        &nbsp; ->  &nbsp; 5 * 5 * 48 * 128 * 2(output이 위, 아래 2개 이므로)<br>
         <br>
 
-        &nbsp; 4. &nbsp; Bias-variance tradeoff <br>
-        &nbsp;&nbsp; - &nbsp; variance : 출력이 얼마나 일괄적인가? (낮을수록 일괄적이다.)<br>
-        &nbsp;&nbsp; - &nbsp; bias : 평균적으로 봤을때 원하는 답과 비슷한가? (낮을수록 원하는 답과 비슷하다.)<br>
-        &nbsp;&nbsp; => &nbsp; variance와 bias가 낮은게 좋다. 그 다음 bias는 높더라도 variance가 낮은게 좋다. 왜냐하면 군집되어있는 곳만 잘 학습시켜서 바꿔주면 되기 때문이다(사격으로 예시를 들면 탄착군이 중앙보다 위에 있더라도 다음번에는 좀 더 아래로 쏘면 탄착군이 중앙으로 이동할 확률이 크기 때문).<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; Bias and variance tradeoff : noise가 있을때 cost를 줄이기 위해서 bias, variance를 낮출때 둘 다 줄어들지는 않는다. 하나가 줄어들면 다른 하나가 커진다. <br>
-        <img src='./img/tradeoff.png'>
-        <br><br>
+        &nbsp; 3. &nbsp; 문제 내용 동일<br>
+        <p align='center'><img src='./img/ex3.png'></p>
+        &nbsp; ->  &nbsp; 3 * 3 * 128 * 2(자세히 보면 커널이 위, 아래로 사용됨) * 192 * 2(output이 위, 아래 2개 이므로)<br>
+        <br>
 
-        &nbsp; 5. &nbsp; Bootstrapping <br>
-        &nbsp;&nbsp; - &nbsp; 학습 데이터를 가지고 여러 모델을 만들고 동일한 여러 모델에 동일한 input을 주었을때 결과의 일관성 정도를 확인<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 조금 더 알아보기 <br>
+        &nbsp; 4. &nbsp; 문제 내용 동일<br>
+        <p align='center'><img src='./img/ex4.png'></p>
+        &nbsp; ->  &nbsp; 3 * 3 * 192 * 192 * 2(output이 위, 아래 2개 이므로)<br>
+        <br>
+
+        &nbsp; 5. &nbsp;문제 내용 동일<br>
+        <p align='center'><img src='./img/ex5.png'></p>
+        &nbsp; ->  &nbsp; 3 * 3 * 192 * 128 * 2(output이 위, 아래 2개 이므로)<br>
+        <br>
+
+        &nbsp; 6. &nbsp; 문제 내용 동일 <br>
+        <p align='center'><img src='./img/ex6.png'></p>
+        &nbsp; ->  &nbsp; 13 * 13 * 128 * 2048(벡터) * 2(output이 위, 아래 2개 이므로)<br>
+        &nbsp; *  &nbsp; dense layer는 MLP이다. -> 파라미터 개수는 input의 파라미터 * out의 개수이다.<br>
+        <br>
+
+        &nbsp; 7. &nbsp; 문제 내용 동일 <br>
+        <p align='center'><img src='./img/ex7.png'></p>
+        &nbsp; ->  &nbsp; 2048 * 2(2개의 벡터가 크로스 되기도 해서 -> 한개당 크로스 + 직선) * 2048 * 2(output이 위, 아래 2개 이므로)<br>
+        <br>
+
+        &nbsp; 8. &nbsp; 문제 내용 동일 <br>
+        <p align='center'><img src='./img/ex8.png'></p>
+        &nbsp; ->  &nbsp; 2048 * 2 * 1000<br>
+        <br>
+
+        * 1 * 1 convolution<br>
+        &nbsp; - &nbsp; special dimension을 유지하되 파라미터를 줄일 수 있다. <- 자세한 것은 5강에서~~ <br>
+        <br>
+
+    * 5강 : Modern Convolutional Nerual Networks
+        * AlexNet<br>
+
+        <br>
+
+        * VGGNet<br>
+
+        <br>
+
+        * GoogleNet<br>
+
+        <br>
+
+        * ResNet<br>
+
+        <br>
+
+        * DenseNet<br>
+
+        <br>
+
+    * 6강 : Computer Vision Applications(Semantic Segmentation and Detection)
+        * Segmantic Segmentation<br>
+            &nbsp; - &nbsp; 개요 <br>
+
+            <br>
+
+            &nbsp; - &nbsp; Fully Convolutional Network <br>
+
+            <br>
+
+            &nbsp; - &nbsp; Deconvolution(conv transpose)<br>
+
+            <br>
+
+        * Detection
+            &nbsp; - &nbsp; R-CNN <br>
+
+            <br>
+
+            &nbsp; - &nbsp; SPPNet <br>
+
+            <br>
+
+            &nbsp; - &nbsp; Fast R-CNN <br>
+
+            <br>
+
+            &nbsp; - &nbsp; Region Proposal Network <br>
+
+            <br>
+
+            &nbsp; - &nbsp; YOLO <br>
+
+            <br>
+
             
-            The Adventures of Baron Munchausen(바론의 대모험)이라는 책을 보면 주인공 바론이 늪에 빠지게 되는데 이때 자신의 장화 끝 단(bootstrap)을 잡아 올라 스스로 늪에서 빠져나오는 장면이 나온다. 사실 작용 반작용의 법칙에 따라 불가능한 일이지만 논리는 차치하고, 이 일화처럼 스스로를 구해낸다는 뜻으로 bootstrap이라는 단어가 사용되었다.
-
-            Bootstrap sampling 사용하는 이유
-            Bootstrap sampling을 하면 애초에 한 개 밖에 없었던 우리들의 sample data set을 n개의 sample data set을 가지고 있는 것과 같은 효과를 누릴 수 있게 한다. 이를 통해 우리는 data의 variance를 상당히 잘 근사 할 수 있는 결과를 볼 수 있다.
-
-             Bootstrap sampling을 하는 방법은 매우 간단하다. N개의 sample data를 가지고 있을 때 1000개의 bootstrap samples를 만들고자 하면, 복원 추출을 N번 실행하여 새로운 sample data set을 만들고 이 작업을 1000번 반복하면 된다.
-
-         [조금 더 알아보기 인용 사이트1](https://modern-manual.tistory.com/31)
-        <br>
-
-        &nbsp; 6. &nbsp; Bagging and boosting <br>
-        &nbsp;&nbsp; - &nbsp; bagging : 여러 모델의 output을 이용<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 조금 더 알아보기<br>
-
-            배깅의 풀네임은 Bootstrap aggregating 입니다. 말 그대로 부트스트랩(Bootstrap)을 통해서 다양한 데이터셋을 만들고 이를 학습시킨 모델을 모으는(Aggregating) 방법입니다. 
-
-            bootstrap과 같이 복원추출에 경우 선택되지 않은 data가 존재할 수 있다. 이것을 OOB(Out Of Bag)라고 하며 공식은 다음과 같습니다.
-
-                                        p=(1−1N)N
-            N 이 커질수록 아래의 식에 의해서 이 값은 약 37% 정도에 가까워집니다
-        <p align='center'><img src='./img/oob.png'></p>
-
-            부트스트랩은 데이터의 분포를 변형하는 효과가 있습니다. 원래 데이터의 노이즈 ϵ 가 특정 분포를 따르고 있다면 이를 통해 만드는 모델은 분포에 종속될 수 밖에 없는데요. 부트스트랩을 통해 분포를 다양하게 만들어 주면 특정 분포에 종속된 모델이 만들어지는 것을 방지함으로써 다양성을 확보할 수 있습니다.
-
-            게다가 OOB 데이터를 검증에 사용하면 모든 샘플을 학습과 검증에 활용하여 높은 검증력을 확보할 수 있다는 효과도 있습니다.  
-
-            learning, result aggreating 등 이후 여러 내용에 대해서는 생략하도록 하겠습니다.
-
-        [조금 더 알아보기 인용 사이트1](https://yngie-c.github.io/machine%20learning/2021/03/19/bagging/)<br>
-        [조금 더 알아보기 인용 사이트2](https://gggggeun.tistory.com/29)<br>
-        [조금 더 알아보기 인용 사이트3](https://m.blog.naver.com/biomath2k/221869229383)
-        <br>
-
-        &nbsp;&nbsp; - &nbsp; boosting : 처음 모델이 해결하지 못하는 문제에 대하여 이후 모델을 이용하는 연속적인 방식<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 조금 더 알아보기<br>
-
-            일단 첫 번째 약한 모델이 학습 결과를 내놓으면 이를 바탕으로 오답 노트를 만듭니다. 두 번째 모델은 오답 노트를 바탕으로 공부하게 되며 이런 과정을 계속 반복하게 됩니다. 이와 같이 순차적으로 진행되기 때문에 병렬 처리(Parallel processing)가 불가능하다는 단점을 가지고 있습니다. 다만 Stump tree(결정 경계를 하나만 형성하는 의사 결정 나무)와 같은 약한 모델을 기반으로 하므로 결정 경계가 없어도 복잡도가 높은 모델을 사용하는 배깅보다 빠르게 학습이 진행되곤 합니다.
-
-        [조금 더 알아보기 인용 사이트1](https://yngie-c.github.io/machine%20learning/2021/03/20/adaboost/)<br>
-        [조금 더 알아보기 참고 사이트1](https://tyami.github.io/machine%20learning/ensemble-3-boosting-AdaBoost/)
-
-
-        &nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; 이러한 4가지 관점을 토대로 논문 혹은 연구를 본다면 이전 논문과 연구에 비해 어떤 장점이 있고 어떤 부분에 기여를 했는지 알 수 있다. <br>
-        <br>
-    * Gradient descent 방식<br>
-         &nbsp; 1. &nbsp; Stocahstic gradient descent<br>
-         &nbsp;&nbsp; - &nbsp; 확률적 경사하강법으로 개념적으로는 iter당 1개의 data를 가지고 경사를 구하고 파라미터를 학습시킨다.<br>
-         <br>
-
-         &nbsp; 2. &nbsp; Momentum<br>
-         &nbsp;&nbsp; - &nbsp; b(beta)라는 하이퍼 파라미터(momentum)를 두고 이것과 현재의 gradient, accumulation을 활용하여 가중치를 업데이트를 한다.<br>
-         <p align='center'><img src='./img/momentum.png' width=350></p>
-         <br>
-
-         &nbsp; 3. &nbsp; Nesterov accelerated gradient<br>
-         &nbsp;&nbsp; - &nbsp; momentum과 비슷하지만 at+1을 구할때 mometum과 다르게 한 번 이동하고 거기서 계산한 gradient를 이용한다.<br>
-         <p align='center'><img src='./img/NAG.png'></p>
-         <br>
-
-         &nbsp; 4. &nbsp; Adagrad<br>
-         &nbsp;&nbsp; - &nbsp; 적게 변한 파라미터는 많이 변화시켜주고 많이 변한 파라미터는 적게 변화시켜준다. <- 이러한 역할을 하는게 밑에 그림의 G(모든 gradient의 제곱의 합)이다. 그래서 gradient가 작다면 적게 변한 것이고 크다면 많이 변한 것이다. 그리고 이 값을 분모에 넣어주기 때문에 많이 변할수록 적은 변화만 생긴다.<br>
-         &nbsp;&nbsp; - &nbsp; 아래와 같이 Gt는 시간이 지날수록(gradient를 계산하면 할수록) 커지므로 일정 시간이 지나면 분모가 무한대가 되어 변화가 없어진다.<br>
-         <p align='center'><img src='./img/adagrad.png'></p>
-         <br><br>
-
-         &nbsp; 5. &nbsp; Adadelta<br>
-         &nbsp;&nbsp; - &nbsp; adagrad에서 Gt가 커지는 현상을 막기 위해 만들어진 방법<br>
-         &nbsp;&nbsp; - &nbsp; G를 구할 때 합을 구하는 대신 지수평균을 구한다. 이때 RMSprop과 다르게 step size를 단순하게 η 로 사용하지 않고 대신 step size의 변화값의 제곱을 가지고 지수평균 값을 사용한다.<br>
-         &nbsp;&nbsp; - &nbsp; 이때 Gt를 구할때 r은 learning rate가 아니다. ??? <- 그런데 코드에서는 다음과 같이 learning rate 값을 준다. 뭐징??<br>
-         <img src='./img/adadelta.png'>
-         [Adadelta 추가 정보 사이트1](http://shuuki4.github.io/deep%20learning/2016/05/20/Gradient-Descent-Algorithm-Overview.html)<br>
-         [지수평균식 정보 사이트1](https://wooono.tistory.com/225)<br>
-         [adadelta 코드에 대한 사이트](https://twinw.tistory.com/247)<br>
-         [위의 문제를 해결하는데 도움을 줄 것 같은 사이트](https://dev-jm.tistory.com/10)
-         <br><br>
-
-         &nbsp; 6. &nbsp; RMSprop<br>
-         &nbsp;&nbsp; - &nbsp; adadelta와 비슷하지만 가중치를 업데이트 시켜줄때 stepsize를 이용한다.<br>
-         &nbsp;&nbsp; - &nbsp; 이때 stepsize가 learning rate이다.<br>
-         <br>
-
-         &nbsp; 7. &nbsp; Adam<br>
-         &nbsp;&nbsp; - &nbsp; momentum과 EMA, 에타(stepsize, 𝜂), 입실론(𝜖)등을 이용하여 업데이트를 해준다.<br>
-         <img src='./img/adam.png'>
-         [추가로 보면 좋을 것 같은 사이트1](https://hiddenbeginner.github.io/deeplearning/2019/09/22/optimization_algorithms_in_deep_learning.html#Adam)
-         [추가로 보면 좋을 것 같은 사이트2](https://dalpo0814.tistory.com/29)
-         <br><br>
-
-    * Regularization : 주목적이 test data에서도 좋은 성능을 나오게 하기 위해서 학습을 방해하는 것<br>
-        &nbsp; 1. &nbsp; Early stopping <br>
-        &nbsp;&nbsp; - &nbsp; 일반적으로 학습을 많이 시키면 train error는 적게 나오지만 test error는 크게 나온다. 따라서 overfitting 되기 전에 학습을 멈추게 하는 방법이다. <br>
-        <br>
-
-        &nbsp; 2. &nbsp; Parameter norm penalty(Weight decay) <br>
-        &nbsp;&nbsp; - &nbsp;  네트워크 파라미터가 너무 커지지 않게 하기 위해 패널티를 줘서 일반성을 높여주는 방법이다.<br>
-        <br>
-
-        &nbsp; 3. &nbsp; Data augmentation <br>
-        &nbsp;&nbsp; - &nbsp; 데이터가 적을때는 XGBoost, Random Forest 등이 성능이 좋다. 하지만 데이터 수가 많아지면 Deep learning이 성능이 좋아진다(deep learning에서 많은 데이터에 대해서 표현할 수 있기 때문 <- 이 의미가 많은 데이터를 처리할 수 있는 파라미터를 학습시킬 수 있다 - 라는 의미이지 않을까 싶다). 이러한 점에서 적은양의 데이터를 추가적으로 만들어 주기 위해서 약간의 변화를 줘서 같은 레이블의 다른 데이터를 만들어 주는 방식<br>
-        &nbsp;&nbsp; - &nbsp;  예를 들어서 강아지 사진이 있을때 이 사진을 20도, 50도 180도로 돌려도 label은 강아지이다.<br>
-        <br>
-
-        &nbsp; 4. &nbsp; Noise robustness <br>
-        &nbsp;&nbsp; - &nbsp;  데이터에 노이즈를 집어넣어줘서 학습시키면 test성능이 좋게 나오게 하는 방식이다.<br>
-        &nbsp;&nbsp; - &nbsp; 이 방법이 왜 잘되는지에 대한 정확한 증명은 없다.<br>
-        <br>
-
-        &nbsp; 5. &nbsp; Label smoothing <br>
-        &nbsp;&nbsp; - &nbsp; 학습단계에서 train data를 2집단으로 뽑아서 이것을 섞어주는 방식이다.<br>
-        &nbsp;&nbsp; - &nbsp;  예를 들어서 아래와 같이 고양이와 개 사진을 합쳐서 학습시켜준다. 이때 label도 섞어진다.<br>
-        <img src='./img/label_smooting.png'><br>
-        <br>
-
-        &nbsp; 6. &nbsp; Dropout <br>
-        &nbsp;&nbsp; - &nbsp; 신경망 네트워크에서 일부 가중치를 0으로 해줘서 아래의 오른쪽과 같이 만들어준다.<br>
-        <img src='./img/dropout.png'><br>
-        <br>
-
-        &nbsp; 7. &nbsp; Batch normalization <br>
-        &nbsp;&nbsp; - &nbsp; 활성화함수의 활성화값 또는 출력값을 정규화하는 작업을 말한다. -> 신경망의 각 layer에서 데이터(배치)를 정규화하는 작업이다. <br>
-        &nbsp;&nbsp; - &nbsp; 배치 정규화를 활성화함수 이전에 하는지 이후에 하는지는 계속된 논의와 실험이 진행중이다.  <br>
-        &nbsp;&nbsp; - &nbsp; 일종의 노이즈를 추가하는 방법으로 이는 배치마다 정규화를 함으로써 전체 데이터에 대한 평균의 분산과 값이 달라질 수 있다.  <br>
-        [좀더 참고해서 볼 사이트1](https://sacko.tistory.com/44)<br>
-        [좀더 참고해서 볼 사이트2](https://eehoeskrap.tistory.com/430)<br>
-
-        <br>
 
 
     
@@ -181,9 +152,7 @@
 ### 2. 과제 수행 과정 / 결과물 정리
 <br>
 
-#### 필수 과제는 강의를 보면서 잘 따라갔다. 그러나 중간에 matplotilb을 설치하고 restart를 해줘야 하는데 안 해줘서 생기는 오류 때문에 시간이 조금 걸렸다.
-
-#### 선택 과제같은 경우는 어제 유튜브보고 오늘 블로그를 보면서 해결하려고 하지만 잘 이해가 안된다. 포기하지 말고 반복해서 알때까지 읽어야 겠다 ㅠㅠ
+#### 오늘 필수 과제 역시 강의를 들으면서 하면 잘 따라갈 수 있었다. 하지만 이런식으로 공부하면 도움이 안 될 것 같아서 오늘부터 과제 내용을 완벽하게 파악하고 그 코드를 따라치면서 추후 안 보고 해당 내용을 작성할 수 있도록 반복학습할 생각이다. 먼저 목표(Level 1)는 MLP이다! 
 
 <br>
 
@@ -194,84 +163,101 @@
 
 
 🔍[지난주 질문]
-
+<br><br>
 - SVD 특이값 분해
-
-Q. 대각행렬의 갯수를 제한하여 압축하는 방법 : 어떤 기준으로 압축하고 어떻게 적용되는가?
-A. (적용흐름은 코드 참조) Sigma-Singular value가 가장 높은 것부터 추출. 즉, 가장 유의미한 정보순으로 나열 후 뒤부터 탈락시키며 압축시킨다.
-Q. SVD에서 Simgular value가 원래 크기 순으로 정렬되어 있는가?
-A. 더 조사 후 내일 답변.
-
-
-🔍[지난 질문들]
-
-- SVD 특이값 분해
-Q. SVD에서 Singular value가 원래 크기 순으로 정렬되어 있는가?
-- 맞습니다.
-
-  
-📒 [강의 관련 질문]
-
-Q. Adadelta - 실제로 거의 사용하지 않는 이유는 성능이 낮기 때문인가요?
-- 성능이 낮다기 보다 learning rate가 없어 최적화가 관여할 요인이 없다.
-- 다른 optimizer가 일반적으로 학습에 관여할 부분이 많아 성능이 더 잘나온다.
+<br><br>
+Q. 대각행렬의 갯수를 제한하여 압축하는 방법 : 어떤 기준으로 압축하고 어떻게 적용되는가?<br>
+A. (적용흐름은 코드 참조) Sigma-Singular value가 가장 높은 것부터 추출. 즉, 가장 유의미한 정보순으로 나열 후 뒤부터 탈락시키며 압축시킨다.<br><br>
+Q. SVD에서 Simgular value가 원래 크기 순으로 정렬되어 있는가?<br>
+A. 더 조사 후 내일 답변.<br><br>
 
 
-📌 [선택과제 1번 ViT 관련 질문]
+20210811 피어세션<br>
+<br>
+모더레이터: 김범수<br><br>
 
-Q. Transformer encoder 구현할 때 residual 부분이 다른 코드와 비교했을때, class로 구현하지 않더라도 맞나요?
-- 맞습니다.
+회의록작성: 박승찬<br><br>
 
-Q. attention visualization에서 error가 납니다.
-- slack에서 다른 캠퍼분께서 수정하는 부분을 알려주셨다.
-- 수정하지 않고도 attention을 리스트에 append하면서 shape을 맞추었더니 작동했다.
+🔍[이전 질문 리뷰]<br><br>
 
-Q. position embedding을 할때 random한 값을 넣는 이유?
-- 학습하는 값으로 생각해 랜덤하게 생성한 후 더해주었다.
+ViT(Visual Transformer): 금일(21210811) 19시 멘토링 시간에 질문하기로 함.<br>
+각 Patch를 차원이 줄여진 잠재 벡터(latent vector)로 볼 수 있는가?<br>
+MNIST dataset 사용 기준 각 (4,4)의 크기의 Patch 49개가 생성된다. <br>
+📒[금일 질문 목록]:<br><br>
 
-Q. cls_token과의 concat으로 x의 shape이 어떻게 바뀌는 건가요?
-- x의 shape이 (1, 49, 16)에서 concat으로 (1, 50, 16)이 된다.
-- 이후 position의 shape이 (50, 16)이므로 x와 position을 더하는 과정에서 broadcasting이 일어난다.
+CNN 수강 관련 질문<br><br>
+* Dense layer를 잘 이해하지 못하겠다.<br><br>
+* Fully Connected Layer과 같은 것.<br><br>
+* Dense layer의 가중치 또한 학습이 진행되는가?<br><br>
+-> 에러에 따라 모든 (Conv, FCN)의 가중치들의 학습이 진행된다.<br><br>
+* Convolution 연산에서 가중치의 차원은 (kernel_W, kernel_H, in_channel, out_channel)과 같다.  그렇다면 in_channel 기준으로 같은 값으로 연산이 진행되는지(Broadcasting) 또는 각 in_channel마다 다른 값을 가지는지 궁금하다.<br>
+-> 강의에서 학습할 가중치의 개수가 “kernel_W * kernel_H * in_channel * out_channel” 이라고 설명한 것으로 미루어 보아, 각각 다른 in_channel 가중치는 각각 다른 값을 가질 것이라고 생각된다.<br><br>
+e.g. in_channel 기준 각각 다른 가중치의 값은 다음과 같다. (parameter[0,0,:,0])<br><br>
+📎[선택과제 3번 살펴보기]<br><br>
 
-Q. nn.linear mlp와의 차이가 없는건가요?
-- nn.linear는 layer 그 자체로 fully connected된 선형변환이라고 생각.
-- mlp는 activation function이 들어갔다.
+Mixture_density_Network_문제<br><br>
+* 일대일 대응이 아닌 그래프에 대해 회귀(근사)를 어떻게 할 것인가?<br>
+-> 위 식에서 변수 y의 의미<br>
+-> 가우시안 분포의 변수로 생각됨.<br>
+-> 또한 위의 식은 x, y축이 서로 바뀐 것으로 생각됨.<br><br>
+* 과제 설명 중 MSELoss(Mean Squared Error Loss)를 사용하지 못한다고 했다. 이에 관한 질문.<br>
+-> 로그 우도(Log Likelihood)를 사용하려고 한 것 같다.<br><br>
+* Gumbel softmax sampling에 대해 알고싶다.<br><br>
 
-Q. colab과 구글드라이브에서 데이터 저장이 마운트 없이 가능한가요?
-- 가능하지만 구글드라이브에 저장하면 다운로드도 가능하다.
+📎[ViT 관련 추가 질문]<br><br>
 
-해결하지 못한 질문들은 대부분 아직 배우지않은 모델에서 나왔습니다.
-이후 멘토님과의 시간에서 질문하기로 했습니다.
+* Q, K, V 가 각각 의미하는 것이 무엇일까?<br>
+-> 단어와의 연관성, cosine 유사도 관련 설명 진행함<br><br>
 
-Q. attention을 넣을때 list를 만들어 넣어도 잘 작동하는 이유는 무엇인가요?
+#### 내가 질문 했던 내용
 
-Q. transformer에 들어가는 latent vector는 각각의 patch를 의미하나요?
+#### Q. CNN에서 Dense를 사용하는 이유?
+#### A. 마지막에 softmax에서 가장 적합한 것을 찾기 위해서 Dense를 사용한다.
+<br>
 
-Q. self-attention의 shape이 768 -> 64 ->768로 바뀌는데 어떻게 되는건가요?
+#### Q. Dense와 MLP는 같은 것인가?
+#### A. 비슷한 것 같다.
+<br>
+
+#### 추가로 알게 된 내용
+#### + CNN에서 학습되는 것은 filter의 값과 Dense의 가중치이다.
+<br><br>
+
+### 4. 흥미있던 질문들
+
+1. [[DL Basic 5강] Convolution에서 2x2 커널이 안쓰이는 이유가 궁금합니다.](https://www.boostcourse.org/boostcampaitech2/forum/96886)<br>
+
+    
+    VGG 에서 5x5 커널은 3x3 두개로 대체할 수 있다고 설명해주셨는데,
+    같은 논리로 3x3 커널을 2개의 2x2커널로 대체할 수 있을 것 같습니다. (학습파라미터는 9 -> 8 로 줄어드니깐 더 효과적이지 않을까 생각합니다.)
+    당연히 성능이 안좋으니까 안쓸텐데, 이에 대한 이론적인 이유가 있는지 아니면 그냥 해보니 잘 안되네해서 안쓰는지 궁금합니다.
+
+답변 
+
+    홀수 커널을 사용하는 이유는, 그 전 이미지 레이어 픽셀의 정보를 symmetrical (대칭적)으로 뽑을 수 있기 때문입니다. 아래의 이미지처럼 홀수 커널은 중간의 output pixel 주위의 픽셀들을 elementwise multiplication과 sum을 통해 symmetrical하게 뽑아 주변의 픽셀 정보를 그 다음 레이어로 보내줍니다. 
+    하지만 짝수의 경우에는 이렇게 주위에 있는 픽셀들을 대칭적으로 뽑을 수 없게 되죠. 그래서 생기게 되는것이 aliasing 같은 distortion이 생기게 되는것이죠. Aliasing의 예시를 아래에 참고해두었습니다. 
 
 
+<br><br>
 
-### 4. 학습 회고
+### 5. 학습 회고
 
-#### 피어세션에서 나온 질문 중에 오늘 강의와 관련된 질문이 있었다. 해당 질문을 통해서 내가 강의를 제대로 이해하지 못했음을 알게 되었고 강의 내용을 정리하면서 수식에서 내가 놓치는 부분이 없는지 다시 확인해 봐야겠다.
+#### 오늘 강의 또한 집중해서 보지 않으면 잘 이해되지 않는 내용들이 많았다. 그래서 강의 정리하면서 강의를 한번 더 듣는다. 이러한 방식때문에 강의를 정리하는데 시간을 많이 소비하고 선택과제에 대해서는 많이 못하지만 어쩔 수 없는 것 같다. 일단, 1~2주 후에 있을 팀프로젝트에 도움이 되려면 기본기가 튼튼해야 될 것 같아서 부스트캠프에 메인부분만 잘 이해하고 따라갈 생각이다.
 
 <br>
 
-#### 피어세션때 다른 캠퍼분들은 선택과제 1을 완료하신것 같다. 나는 아직.... ㅎㅎ;;; ㅠㅠ
-#### 그래서 선택과제 코드와 관련된 질문이나 대답을 할 수 없었다... 
+#### git에 대한 특강을 들었는데 github와 vscode에 대한 유익한 내용을 알 수 있어서 매우 좋았다. 이전까지는 terminal로 git clone, push, pull, fetch, merge등을 했는데 vscode의 palette와 git graph를 이용하면 좀 더 쉽게 할 수 있다는 것을 알 수 있어다. 또 github issue에 용도에 대해서는 알고 있었지만 오늘 설명을 통해서 좀 더 알 수 있어서 좋았다.
+<br>
+
+#### 피어세션에서는 선택과제 3에 대해서 많은 이야기를 했다(물론 나는 듣기만 했다 ㅎㅎ;). 이번주는 메인 내용에 대한 완벽한 이해를 목표로 하고 있어서 피어세션에서는 주로 듣거나 궁금한 것에 대해서 가끔 질문정도 할 것 같다.
+<br>
+
+#### 그리고 새로운 캠퍼분이 우리조로 배정이 되셨다. 앞으로 4주간 잘 지내서 팀프로젝트 때 다 같이 좋은 결과를 얻었으면 좋겠다 ㅎㅎㅎㅎ
 
 <br>
 
-#### 일단 지금은 학습이고 배우기 위한 과정이니까 괜찮지만 나중에 2주뒤에 있을 경진대회 같은 팀단위 활동에서는 오늘과 같이 뒤쳐지면 안 된다. 만약에 뒤쳐지다면 나 때문에 다른 캠퍼님들이 피해를 입게 될 것이다. 그러므로 경진대회전까지 기초를 탄탄히해서 경진대회때 내가 맡은 역할을 잘 수행할 수 있도록 실력을 키워야겠다. 열심히 노력하자~~!!! 화이팅~~~😊
+#### 질문게시판에 글을 읽으면서 여러 질문에 대해서 생각해볼 수 있어서 가끔씩 질문게시판에 들어가서 눈팅하려고 한다. 그리고 내가 아는 것에 대해서는 답을 하려고 하지만 대부분 잘 모르는 내용들이었다 ㅎㅎ; 
 
 <br>
 
-#### 아무튼 오늘도 유익한 피어세션이었다 🤩
-
-<br>
-
-#### 도메인 강의와 마스터 클래스 강의를 들었는데 매우 유익했다. 특히 도메인 같은 경우는 cv와 nlp에 대해서 어떻게 공부하면 좋을지 또 이후 과정에서 어떤 것을 중점적으로 보면 좋을지에 대해서 알게 되었다. 마스터 클래스에서는 시각화의 중요성에 대해서 어느정도 이해하게 되었다. 하지만 시각화를 언제 어떻게 활용하면 좋을지는 잘 모르겠다. 이 부분은 강의를 수강하다보면 알게 되지 않을까 싶다.
-
-<br>
-
-#### 오늘도 보람찬 하루였다 ㅎㅎ 
+#### 오늘도 즐거운 하루였다~~~~~ㅎㅎㅎㅎㅎㅎㅎㅎ 
