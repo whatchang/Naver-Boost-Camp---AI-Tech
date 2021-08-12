@@ -146,36 +146,54 @@
     * 6강 : Computer Vision Applications(Semantic Segmentation and Detection)
         * Segmantic Segmentation<br>
             &nbsp; - &nbsp; 개요 <br>
-
-            <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 어떤 이미지가 있을때 이것을 픽셀마다 구분하는 것이다. <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 자율주행에서 사용된다. <- 카메라로 이미지를 잡으면 이것이 무언인지, 예를 들어서 차인지, 사람인지, 인도인지, 차도인지 등을 구분해주기 위해서 사용된다. <br>
 
             &nbsp; - &nbsp; Fully Convolutional Network <br>
-
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; dense layer을 없애주는 것이 convolutionalization이라고 한다. <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; convolutionalization의 장점은 dense layer를 없앤 것이다. <- 왜 이게 장점이지? 추측 - dense layer는 mlp와 같으므로 convoltion 연산에 비해 많은 파라미터를 요구해서 <- 이 부분에 대해서는 6강 4분58초쯤에 교수님께서 dense layer에서의 파라미터와 fully convolutional network랑 정확히 같은 파라미터라고 언급하심. 그러므로 추측 틀림<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 위의 내 추측은 틀린것 같다. convolutionalization을 해주는 이유는 heatmap때문에 하는 것 같다. <- 좀 더 정확하게 알기 위해서는 질문게시판을 이용해서 물어보려고 한다.<br>
+            [참고한 블로그1](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=leesoo9297&logNo=221164123890)<br>
+            [참고한 블로그2](https://m.blog.naver.com/9709193/221974662268)
             <br>
+             &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 파라미터가 동일한 이유는 아래와 같을때 왼쪽은 4 * 4 * 16을 flat해줘서 4 * 4 * 16 을 깊이가 10인걸로 만들기 위한 파라미터는 4 * 4 * 16 * 10이 필요하고 오른쪽 같은경우는 4 * 4 * 16에서 4 * 4 * 16 filter로 깊이를 10으로 만들어줘서 총 파라미터는 4 * 4 * 16 * 10이 된다.<br>
+             <img src='./img/fcn1.png'>
+              &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; __fully convolutional network의 special dimension에 관한 문제점을 잘 이해하지 못했음__ <- 주말에 다시 알아보기 혹은 질문게시판 활용<br>
 
             &nbsp; - &nbsp; Deconvolution(conv transpose)<br>
-
+             &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; convolution 역 연산 -> 효과 : special dimension을 늘려준다. <br>
+             &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 그런데 엄밀하게 말하면 convolution의 역 연산은 불가능하다. 그러나 convolution 역 연산으로 이해하면 network arichtecture를 만들때 파라미터의 숫자와 network의 크기를 계산할때 도움이 되기 때문 <br>
+             &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 아래의 그림에서 오른쪽처럼 2 * 2에서 padding을 많이 줘서 5 * 5를 만들 수 있다.<br>
+             <img src='./img/deconvolution.png'>
+            <br>
             <br>
 
-        * Detection
-            &nbsp; - &nbsp; R-CNN <br>
+        * Detection 
+            &nbsp; - &nbsp; 개요 <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 이미지 안에서 특정 object의 bound-box를 찾는게 목적 <br><br>
 
+            &nbsp; - &nbsp; R-CNN <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; 이미지 안에서 feature를 많이 뽑는다<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; region에 대해서 cnn으로 계산 <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; 3. &nbsp; linear SVM을 통해서 분류하자 <br>
             <br>
 
             &nbsp; - &nbsp; SPPNet <br>
-
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; R-CNN과 비슷하지만 이미지 안에서 cnn을 한번만 돌리려고 함. <br>
             <br>
 
             &nbsp; - &nbsp; Fast R-CNN <br>
-
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; SPPNet과 비슷하다.<br>
             <br>
 
-            &nbsp; - &nbsp; Region Proposal Network <br>
-
+            &nbsp; - &nbsp; Faster R-CNN <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Faster R-CNN = region proposal network + fast R-CNN <br>
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ region proposal network : 이미지 안에 bound-box안에 물체가 있을지 없을지 알려주는 역할&nbsp;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; anchor boxes : templete을 만들어 놓고 이것이 얼마나 바뀔지에 대한 정보?<br>
             <br>
 
             &nbsp; - &nbsp; YOLO <br>
-
+            &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Faster R-CNN보다 빠르다. 그 이유는 이미지에서 특정 boundary box를 찾고 각 box에 대한 object를 분류하는게 아니라 image를 넣으면 이러한 과정이 한번에 이루어 진다(찾고 분류가 아니라 찾으면서 동시에 분류가 된다는 말인것 같다).<br>
             <br>
 
             
