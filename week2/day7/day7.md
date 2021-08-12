@@ -1,4 +1,4 @@
-# Day 6 DL basic 3강 
+# Day 7 DL basic 3강 
 
 ## 목차 
 
