@@ -26,10 +26,10 @@
         <p align='center'><img src='./img/rgb1.png' width=350></p>
         <br>
         &nbsp; - &nbsp; Stack of Convolutions <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 아래 그림과 같이 32*32*3의 이미지에서 5*5*3 커널을 이용하면 28*28*1 이미지가 나온다 이때 각 원소에 Relu, 활성화 함수를 적용시켜주면 하나의 feature가 나오게 된다. 이것을 4번 해주면 가운데 모양처럼 깊이가 4인 feature가 나온다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 아래 그림과 같이 32 * 32 * 3의 이미지에서 5 * 5 * 3 커널을 이용하면 28 * 28 * 1 이미지가 나온다 이때 각 원소에 Relu, 활성화 함수를 적용시켜주면 하나의 feature가 나오게 된다. 이것을 4번 해주면 가운데 모양처럼 깊이가 4인 feature가 나온다. <br>
         <p align='center'><img src='./img/stack_of_convolutions.png' width=350></p>
-        &nbsp;&nbsp;&nbsp;&nbsp; Quiz. &nbsp; 위에서 첫번째 이미지에서 kernal(5*5*3)을 가지고 convolution연산을 할때(이때 그림과 맞찬가지로 출력의 채널은 4이다.) 몇개의 파라미터가 필요한가?<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; Answer. &nbsp; 5*5*3*4 이다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; Quiz. &nbsp; 위에서 첫번째 이미지에서 kernal(5 * 5 * 3)을 가지고 convolution연산을 할때(이때 그림과 맞찬가지로 출력의 채널은 4이다.) 몇개의 파라미터가 필요한가?<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; Answer. &nbsp; 5 * 5 * 3 * 4 이다.<br>
         <br>
         
         * CNN<br>
@@ -90,23 +90,57 @@
 
     * 5강 : Modern Convolutional Nerual Networks
         * AlexNet<br>
-
+        &nbsp; - &nbsp; 당시 GPU가 부족했기 때문에 2개의 GPU에서 활용하고자 다음과 같이 2개로 나누는 전략을 선택함. <br>
+        <img src='./img/alexnet1.png'>
+        &nbsp; - &nbsp; 네트워크의 총 깊이는 8 layer이다. <br>
+        &nbsp; - &nbsp; 그 당시 성공 요인<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; ReLU 사용 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; GPU 활용 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; local response normalization(지금은 많이 활용되지 않음), overlapping pooling <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Data augmentation <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Dropout <br>
+        
         <br>
 
         * VGGNet<br>
-
+        &nbsp; - &nbsp; 3 * 3 convolution filter만 사용한다. <br>
+        &nbsp; - &nbsp; 1 * 1 convolution을 fully connected layer에 이용 <br>
+        &nbsp; - &nbsp; dropout <br>
+        &nbsp; - &nbsp;  왜 3 * 3 filter만 사용했을까? 아래의 그림을 예시로 설명을 하력고 한다. 둘 중 어느게 파라미터가 더 적을까?<br>
+        <img src='./img/vggnet.png'>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 3 * 3을 2번 쓴 경우 : 3 * 3 * 128 * 128 * 2(2번 사용했으니까)  = 18 * 128 * 128<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 5 * 5 1번 쓴 경우 :  5 * 5 * 128 * 128 = 25 * 128 * 128<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 아래 그림과 같이 3 * 3을 2번 쓴 것과 5 * 5를 1번쓴 것에 사이즈는 같기 때문에 파라미터가 더 적은 3 * 3 filter를 2번 쓰는게 더 좋다. <br>
+        <p align='center'><img src='./img/ex1.jpg' width=350></p>
+        
         <br>
 
         * GoogleNet<br>
-
+        &nbsp; - &nbsp; 1 * 1 convolution을 잘 활용한 방법 <br>
+        &nbsp; - &nbsp; inception blocks이란 다음과 같이 input을 받은 후 퍼졌다가 다시 합쳐지는 모양을 가진다. 이때 1 * 1 convolution이 중요하다. <br>
+        <img src='./img/inception_block.png'><br>
+        <br>
+        &nbsp; - &nbsp; 1 * 1 filter가 중요한 이유는 아래와 같이 1 * 1 filter를 거치고 3 * 3 filter를 적용하는게 더 파라미터가 적다. <- 이것덕분에 googleNet은 이전 기법들에 비해 layer가 깊지만 파라미터는 적게 가져간다.<br>
+        <img src='./img/inception_block2.png'>
         <br>
 
         * ResNet<br>
-
+        &nbsp; - &nbsp; 예전부터 많은 레이어를 쌓게 된다면 아래와 같이 학습이 제대로 이루어지지 못하여 성능이 좋지 않게 나온다. <br>
+        <img src='./img/resnet1.png'>
+        &nbsp; - &nbsp; 이 문제를 아래와 같이 resdual 방식으로 layer를 거쳐서 나온 학습결과(f(x))와 이전 값(x)을 더해준다. <br>
+        <img src='./img/resnet2.png'>
+        &nbsp; - &nbsp; 이 방식을 사용해주면 더 많은 layer를 가지고 있는 network를 이전 보다 더 학습을 잘 시켜줄 수 있다. <br>
         <br>
+        <img src='./img/resnet3.png'>
+        &nbsp; * &nbsp; batch norm의 위치에 대해서는 여러 이야기가 있는듯 하다(먼저 사용하는게 더 좋다. 아니다, 지금과 같은게 더 좋다 등).<br>
+        <img src='./img/resnet4.png'>
+        &nbsp; - &nbsp; 위의 그림처럼 그냥 3 * 3을 사용해주는게 아니라 1 * 1 filter로 채널의 수를 줄여서 3 * 3 convolutioin을 해주고 이후에 이전과 채널의 사이즈를 맞춰주기 위해서 1 * 1 filter로 채널을 늘려준다..<br>
+
 
         * DenseNet<br>
-
+        &nbsp; - &nbsp; 이 방법의 핵심은 ResNet과 달리 이전값과 학습값을 더해주는 것이 아니라 붙여주면(concatenation) 어떨까 - 라는 것이 중요한 부분이다.  -> 붙여주면 붙여줄수록 채널의 사이즈가 증가하게 된다. <- 이러면 파라미터의 개수도 같이 증가하게 된다.<br>
+        &nbsp; - &nbsp; 위의 문제를 해결하기 위해서 1 * 1 convolution을 이용해서 채널 사이즈를 줄여준다. <br>
+        <img src='./img/densenet.png'>
         <br>
 
     * 6강 : Computer Vision Applications(Semantic Segmentation and Detection)
