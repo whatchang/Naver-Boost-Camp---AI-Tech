@@ -68,15 +68,59 @@
 
     * 8강 : Transformer
         * Sequential model의 문제<br>
-        &nbsp; - &nbsp; 8강 정리는 내일~~~ <br>
-
+        &nbsp; - &nbsp; sequential model이 갖는 한계 <br>
+        <img src='./img/limit.png'>
+        &nbsp; - &nbsp; 위의 사진처럼 sequential model은 문장의 어순의 생략, 마지막 단어들의 생략, 도치 등에서 모델링 하기는데 어려움이 있다. <br>
         <br>
 
         * Transformer<br>
-        &nbsp; - &nbsp;  <br>
-        
-        <br><br>
-      
+        &nbsp; - &nbsp; 위의 sequential model의 한계를 해결하기 위해서 seq2seq라는 것이 나왔다. => encoder와 decoder로 구성된다. <br>
+        &nbsp; - &nbsp; [seq2seq 논문 리뷰 유튜브](https://www.youtube.com/watch?v=4DzKM0vgG1Y&t=1132s) <br>
+        &nbsp; - &nbsp; seq2seq가 발전한게 transformer이다. -> 이러한 transformer는 nlp쪽에서만 많이 사용되는게 아니라 여러 도메인에서 사용이 된다. <br>
+        <img src='./img/transformer1.png' width=350><br>
+        &nbsp; - &nbsp; 위의 그림에서 알 수 있는 것들 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; 입력 도메인(독일어)과 출력 도메인(영어)가 달라도 된다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 입력 단어의 개수와 출력 단어의 개수가 달라도 된다. <br><br>
+        &nbsp; - &nbsp; transformer에서 우리가 주의 깊게 봐야 할 부분 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; n개의 단어가 encoder의 input으로 들어갈때 어떻게 한 번에 처리가 되는지 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; encoder와 decoder 사이에 어떤 정보를 주고 받는지에 대해서 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; decoder가 어떻게 generation할 수 있는지 <br>
+        <br>
+        &nbsp; - &nbsp; 아래의 그림과 같이 encoder는 self-attention과 feed forward neural network로 이루어져 있다. <br>
+        <img src='./img/transformer2.png'>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; self attention에서는 각 input 단어들을 가지고 input 단어의 개수와 동일한 vector를 만든다. 이때 vector들은 아래와 같이 서로 영향을 주면서 생성된다. 이렇게 생성된 vector들은 foward를 거치는데 이때에는 다른 vector들에 영향을 주지 않고 진행된다.  <br>
+        <img src='./img/transformer3.png' width=350><br><br>
+        &nbsp; - &nbsp; input으로 'Thinking', 'Machines'이 들어간다면 다음과 같이 하나의 단어당 Query weight, Key weight, Value weight을 통해서 query vector, key vetor, value vetor들이 만들어 진다.<br>
+        <img src='./img/transformer4.png' width=350><br><br>
+
+        &nbsp; - &nbsp; 위에서 구한 query vector, key vector, value vector들을 통해서 embedding vector를 새로운 vector로 바꿔줄 것이다. <br> 
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 이것을 위해서는 score vector를 구해줘야 한다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; score vector를 구해주기 위해서는 내가 encoding을 해주고자 하는 query vector와 전체 key vector를 각각 내적을 해준다. -> encoding 하려는 단어와 나머지 단어들간에 유사도를 측정하기 위함이다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 각각 내적을 해줘서 구한 score vector들을 normalize를 해주고 normalize score vector의 합이 1이 되도록 softmax를 취해준다. 그리고 여기서 각 단어에 대한 value의 weight을 곱한 것을 더해주면 attention value 구하기 끝~~~!<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 이때 query vector와 key vector의 차원은 항상 같아야 한다. <- 내적을 해야하기 때문<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; value vector는 차원이 달라도 된다.<br>
+        <br>
+
+        &nbsp; - &nbsp; 위에서 구한 attention value를 행렬식으로 구하는 방식으로 설명을 한다면 다음과 같이 된다. 이때 X의 행의 수는 단어의 개수이다. 열은 embedding dimension, 그리고 이렇게 해서 나온 key vectordml 열은 attention dimenstion이 된다.<br> 
+        <img src='./img/transformer5.png'><br><br>
+        &nbsp; - &nbsp; 위에서 구해진 query/key/value vector들은 아래와 같이 softmax를 취해주고 그것을 key vector의 사이즈의 제곱근 취해준 값으로 나눈후 value vector로 곱해주고 이러한 방식대로 query vector에 대해서 다른 단어의 key/value vector를 사용해서 나온 weighted value를 더해주면 된다.<br>
+        <img src='./img/transformer6.png'><br><br>
+        &nbsp; * &nbsp; 이미지가 하나가 주어져있을때 CNN이나 MLP으로 dimension을 받으면 input이 고정되어 있을경우 출력도 고정된다. 왜냐하면 convolution filter나 weight가 고정되어있기 때문이다. 그러나 transformer는 하나의 input이 고정되어 있다고 하더라도 그리고 network가 fix되어 있다고 하더라도 내가 encoding 하려는 단어와 옆 에 있는 단어에 따라서 내가 encoding하는 값이 달라지게 된다. <- 강의 19분쯤에 설명해주신 내용, 뭔가 이해될 듯 말듯, 그런데 CNN과 MLP에서도 하나의 input만 고정되고 다른 x2,x3.. 등이 달라지면 출력이 바뀌지 않나? 아! positional encoding에 대해서 말하려는 건가? 아니면 query vector에 대한 각 key vector를 곱한 출력을 말하고 싶으신 건가? 음... 강의를 반복해서 들어보니 일단 여기서 input값은 전체 X를 뜻하는게 아니라 X에 포함된 원소 1개를 뜻하는 것 같다. 그래서 transformeer의 input이면 '나는 밥을 먹었다'에서 '나는' 혹은 '밥을' 혹은 '먹었다'에 해당하는 것 같다. 문장 전체 X. 그러므로 CNN, MLP에서 input값이 fix되어다는 말은 convolution filter와 계산되는 사이즈를 말하는 것이겠지? 음....! CNN과 MLP의 output이 각 convolution 연산 1번, weight * x인 연산이면 다른 x2,x3,x4 등이 바뀐다고해서 x1의 값이 달라지지 않는다. 그러나 transformer같은 경우는 '나는 공부를 한다.'에서 '나는'이 self-attension 계산을 할때 이때 '공부를', '한다'의 key/value vector를 활용하므로 값이 달라질 수 있다. 아하! 이것을 말할려고 하신것 같다. <br>
+        &nbsp; => &nbsp; 위의 내용 결론 transformer가 MLP, CNN보다 표현력이 높아 유연한 모델이다.'<br><br>
+        &nbsp; - &nbsp; 이러한 self-attention을 여러번 반복하는 것을 multi-head attention이라고 한다.<br>
+        <img src='./img/transformer7.png'>
+        &nbsp; - &nbsp; encoder의 입력 차원과 출력 차원이 같아야 하므로 multi-head attention의 결과를 concatenate를 하고 이것을 weight와 곱해줘서 차원을 맞춰준다.<br>
+        <img src='./img/transformer8.png'><br><br>
+        &nbsp; - &nbsp; 실제로는 위와 같이 구현하지 않는다. <- !?!?!(충격) <br>
+        &nbsp; -> &nbsp; 이 부분에 대해서는 코드와 같이 설명해주신다고 함. <br><br>
+        &nbsp; - &nbsp; transformer의 input에 순서를 표현하기 위해서 positional encoding을 더해준다.<br>
+        <img src='./img/transformer9.png'><br><br>
+        &nbsp; - &nbsp; multi-head attention을 거친 결과는 layer normalization을 거치고 feed forward를 한 후 add & normalization을 하면 encoder의 1cycle을 돈것이다. 이러한 cycle을 반복해주면 된다.<br><br>
+        &nbsp; - &nbsp; 마지막 encoder를 통해서 만들어진 key/value vector는 decoder에 전달이 되서 decoder의 query vector와 함꼐 사용되어 최종적으로 다른 도메인의 문장이 된다.(이때 decoder의 multi-head attention은 key와 value값을 이용하여 query를 도출한다?)  <br>
+        &nbsp; * &nbsp; 이때 deconding 단계에서는 'end of sentence'가 나올때까지 decoding을 반복적으로 한다.(이때 input을 하나씩 넣어준다 <- key/value vecoter를 하나씩 넣어주는 건가?)  <- 그런데 3단어 이루어진 문장을 encoder에 넣으면 key/value가 vecoter가 3개만 나와지 않나? 그런데 여기서는 4개가 될 수도 있고 2개가 될 수 도 있고 그런 것 같은데... 뭐징? 왜 그럴까??? <br><br>
+        &nbsp; => &nbsp; [좀 더 자세한 내용은 이것을 참고하자](https://nlpinkorean.github.io/illustrated-transformer/)<br>
+        &nbsp; => &nbsp; [좀 더 자세한 내용은 이 동영상을 보자](https://www.youtube.com/watch?v=AA621UofTUA&t=3s)<br>
+        &nbsp; => &nbsp; [여기에서 decoder부분을 보면 좀 더 이해할 것 같음](https://wikidocs.net/31379)<br><br>
 
 
     
