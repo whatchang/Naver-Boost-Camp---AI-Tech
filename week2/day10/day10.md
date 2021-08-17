@@ -1,4 +1,4 @@
-# Day 9 DL basic 9~10강 Data Viz 2강 
+# Day 10 DL basic 9~10강 Data Viz 2강 
 
 ## 목차 
 
