@@ -19,89 +19,97 @@
 ### 1. 강의 내용 정리
 
 * Pytorch 6~7강
-    * 6강 : AutoGrad & Optimizer
-        * 신경망<br>
-        &nbsp; - &nbsp; 여러 layer들이 합쳐져 하나의 network를 만든다. <br>
-        &nbsp; - &nbsp; 여기서 똑같은 layer들이 반복되기도 한다. <- 이러한 점이 layer와 레고 블록과 비슷하다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 이러한 layer는 torch에서 torch.nn.Module을 이용하여 만들 수 있다.<br>
+    * 6강 : 모델 불러오기
+        * 개요<br>
+        &nbsp; - &nbsp; 학습 결과를 공유하기 위해! <br>
         <br>
 
-        * torch.nn.Module<br>
-        &nbsp; - &nbsp; 딥러닝을 구성하는 Layer의 base class이다. <br>
-        &nbsp; - &nbsp; Input, Output, Forward, Backward 정의 <br>
-        &nbsp; - &nbsp;  학습의 대상이 되는 parameter(tensor) 정의 <br>
+        * model.save() <br>
+        &nbsp; - &nbsp; 학습의 결과를 저장하기 위한 함수 <br>
+        &nbsp; - &nbsp; 모델 형태(architecture)와 파라메터를 저장 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 모델 형태 말고 파라메터만 저장시 적은 용량으로 비슷하게 구현할 수 있다. 모델 형태로 저장하면(파라메터에 비해 용량 좀 차지함) 따로 구현할 필요없이 해당 모델을 가져다 사용하면 된다.<br>
+        &nbsp; - &nbsp; 모델 학습 중간 과정의 저장을 통해 최선의 결과모델을 선택 <br>
+        &nbsp; - &nbsp; 만들어진 모델을 외부 연구자와 공유하여 학습 재연성 향상 <br><br>
+        
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; model.state_dict() : 모델의 파라메터를 표시<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 모델 저장시 확장자는 주로 .pt로 많이 사용한다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; torch.load()를 통해서 path 인자에 해당하는 모델 파일을 불러온다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; model.state_dict()로 해당 모델의 파라미터를 확인할 수 있지만 torchsummary를 이용하면 좀 더 깔끔하게? 볼 수 있다.<br>
+
         <br>
 
-        * nn.Parameter<br>
-        &nbsp; - &nbsp; Tensor 객체의 상속 객체 <br>
-        &nbsp; - &nbsp; nn.Module 내에 attribute가 될 때는 required_grad=True로 지정되어 __학습 대상이 되는 Tensor__ <br>
-        &nbsp; - &nbsp; 우리가 직접 지정할 일은 잘 없다. <- 대붑분의 layer에는 weights값들이 지정되어 있다. <br>
+        * checkpoints <br>
+        &nbsp; - &nbsp; 학습의 중간 결과를 저장하여 최선의 결과를 선택하기 위해서 사용하는 방식 <br>
+        &nbsp; - &nbsp; earlystopping 기법 사용시 이전 학습의 결과물을 저장 <br>
+        &nbsp; - &nbsp; loss와 metric 값을 지속적으로 확인 저장 <br>
+        &nbsp; - &nbsp; 일반적으로 epoch, loss, metric을 함께 저장하여 확인하는 방식 <br>
+        &nbsp; - &nbsp; colab에서 지속적인 학습을 위해 필요하다.<br>
+        &nbsp; - &nbsp; 저장하는 방식 <br>
 
-        * Module의 forward & backward<br>
-        &nbsp; - &nbsp; foward <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 모듈 instance를 만들고 거기에 input을 주게 되면 자동으로 foward가 실행이 된다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; forward 전후에 hook을 집어 넣을 수 있다.  
-        &nbsp; - &nbsp; backward <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Layer에 있는 Parameter들의 미분을 수행한다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Forward의 결과값(model의 output=에측치)과 실제값간의 차이에 대해 미분을 수행한다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 해당 값으로 Parameter 업데이트 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; step()함수로 Parameter 업데이트<br>
-        &nbsp; - &nbsp; 학습 진행 순서 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; optimizer를 zero_grad()함수를 통해서 이전 미분값에 영향을 받지 않도록 초기화 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 만든 instance에 input을 줘서 예측값을 구해준다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 3. &nbsp; loss instance를 통해서 차이를 계산해 준다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 4. &nbsp; backward()를 통해서 gradient를 계산해준다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 5. &nbsp; step()을 통해서 Parameter들을 업데이트 해준다. <br>
-        &nbsp; - &nbsp; backward에 대한 TMI <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 실제 backward는 Module 단계에서 직접 지정가능하다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Module에서 backward와 optimizer오버라이딩은 (알아서)자동으로 해준다.<br>
+                torch.save({
+                    'epoch' : epoch 변수
+                    'model_state_dict' : model.state_dict(),
+                    'optimizer_state_dict' : optimizer.state_dict()
+                    'loss' : loss 변수
+                },
+                f'saved/checkpoint_model_{e}_{epoch_loss/len(dataloader)}_{epoch_acc/len(dataloader)}.pt')
+
+            &nbsp; - &nbsp; 저장하는 방식 <br>
+
+                checkpoint = torch.load(모델 파일 경로)
+                model.load_state_dict(checkpoint['model_state_dict' < - 위에서 저장할 때 지정할 문자 포맷])
+                model.load_state_dict(checkpoint['optimizer_state_dict'])
+                epoch = checkpoint['epoch']
+                loss = checkpoint['loss']
+
+        * Pretrained model & transfer learning<br>
+        &nbsp; - &nbsp; transfer learning <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 다른 데이터셋으로 만든 모델을 현재 데이터에 적용<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 일반적으로 대용량 데이터셋으로 만들어진 모델의 성능이 높다. <br>  
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 현재의 DL에서는 가장 일반적인 학습 기법 <br>  
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; backbone architecture가 잘 학습된 모델에서 일부분만 변경하여 학슴을 수행한다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 멘토님께서 다음주 있을 대회에서 '2.기본적으로 pretrained model을 사용하는데 제한은 없다고 합니다.(이부분은 대회마다 조금씩 달라질 수 있다고하네요)' 라고 알려주셨는데 음... 그러면 이 부분의 내용을 잘 듣고 대회때 활용해 봐야겠다! <br><br>
+        &nbsp; - &nbsp; Freezing : pretrained model을 활용시 모델의 일부분을 frozen 시킨다. <- 다른 사람의 모델을 자신의 데이터에 맞게끔 특정 layer부분만 학습시키는 방식<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 가져온 모델에 대해서 자신이 새로 layer를 추가할 수 도 있다. <- 이때 일반적으로 모델을 직접적으로 수정하지 않고 복사를 하여 사본에 변형을 준다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 모델 저장시 .pht를 지양하는게 좋다. <- 기존의 사용하는 확장자이므로 <br>
                
 
         <br>
 
-    * 7강 : Dataset & Dataloader
+    * 7강 : Monitoring tools for Pytorch
         * 개요<br>
-        &nbsp; 1. &nbsp; 데이터를 모으고 전처리하면 학습을 위한 Data가 만들어 집니다. <br> 
-        &nbsp; 2. &nbsp; Dataset 클래스에서 데이터에 대한 init, len, getitem등의 매직 메서드를 정의해줍니다. <br> 
-        &nbsp; 3. &nbsp; DataLoader 클래스에서 데이터를 어떤식으로 가져올지 정합니다. <br> 
-        &nbsp; 3.5 &nbsp; Dataset 혹은 DataLoader 부분에서 data를 transforms 클래스를 통해서 tensor로 바꿔줍니다. <br> 
-        &nbsp; 4. &nbsp; Model에 데이터를 전달하여 학습을 합니다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Dataset 클래스에서 __ getitem __()은 하나의 데이터를 어떻게 반환을 해줄지에 대해서 정의되어 있는 매직 메소드입니다. <- map-style <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; [transforms에 대한 좀더 자세한 내용(한국어)](https://tutorials.pytorch.kr/beginner/data_loading_tutorial.html)<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; [transforms에 대한 좀더 자세한 내용(영어)](https://pytorch.org/vision/stable/transforms.html)<br>
+        &nbsp; - &nbsp; 모델을 학습하기 위해서는 일반적으로 긴 학습 시간이 필요하다. 이러한 긴 시간의 학습을 기록들을 모니터링하기 위해서 Tensorboard와 weight & biases(wandb)를 사용한다.<br> 
         <br>
 
-        * Dataset 클래스<br>
-        &nbsp; - &nbsp; 데이터 입력 형태를 정의하는 클래스 <br>
-        &nbsp; - &nbsp; 데이터를 입력하는 방식의 표준화 <br>
-        &nbsp; - &nbsp; Image, Text, Audio 등에 따른 다른 입력정의 <br>
-        &nbsp; - &nbsp;  __ init __ : 초기 데이터 생성 방법을 지정 <br>
-        &nbsp; - &nbsp; __ lend __ : 데이터의 전체 길이 지정 <br>
-        &nbsp; - &nbsp;  __ getitem __ : index 값을 주었을 때 반환되는 데이터의 형태 정의 <br>
-        &nbsp; - &nbsp;  Dataset 틀래스 생성시 유의점<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 데이터 형태에 따라 각 함수를 다르게 정의해야 한다. <br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 모든 것을 데이터 생성 시점에 처리할 필요는 없다 : image의 Tensor 변화는 학습에 필요한 시점에 변환해도 상관없다 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 데이터 셋에 대한 표준화된 처리방법을 제공해야 한다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; 후속 연구자 도는 동료에게 많은 도움이 된다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 최근에는 HuggingFace 등 표준화된 라이브러리 사용함 <br>
-        
+        * Tensorboard<br>
+        &nbsp; - &nbsp; TensorFlow의 프로젝트로 만들어진 시각화 도구 <br>
+        &nbsp; - &nbsp; 학습 그래프, metric, 학습 결과의 시각화 지원 <br>
+        &nbsp; - &nbsp; pytorch도 연결 가능 -> DL 시각화 핵심 도구 <br>
+        &nbsp; - &nbsp; tensorboard에서 저장하는 값 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; scalar : metiric(accurancy, loss 등의 지표) 등 상수 값의 연속(epoch)을 표시<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; graph : 모델의 computational graph 표시 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; histogram : weight 등 값의 분포를 표현<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; image : 예측 값과 실제 값을 비교 표시<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; mesh : 3d 형태의 데이터를 표현하는 도구<br><br>
+        &nbsp; - &nbsp; Tensorboard를 사용하기 위한 준비 단계 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; Tensorboard 기록을 위한 디렉토리 생성 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 기록 생성을 위한 SummaryWriter isstance 생성 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 3. &nbsp; 기록하기 위한 함수들을 이용하여 값을 기록 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 4. &nbsp; %load_ext tensorboard과 %tensorboard  --logdir {logs_base_dir}을 이용하여 juptyer와 같은 notebook형태에서 tensorboard 수행 <- logs_base_dir은 해당 값이 쓰여진 directory path를 뜻한다. <br>
 
         <br>
 
-        * DataLoader 클래스<br>
-        &nbsp; - &nbsp; Data의 Batch를 생성해주는 클래스 <br>
-        &nbsp; - &nbsp; 학습직전(GPU feed전) 데이터의 변환을 책임진다.<br>
-        &nbsp; - &nbsp; Tensor로 변환하는 업무 + Batch 처리 업무 <- 메인 업무<br>
-        &nbsp; - &nbsp; 병렬적인 데이터 전처리 코드의 고민이 필요하다.<br>
-        &nbsp; - &nbsp; instance 생성시(dataset instance를 인자로 받음) batch_size와 shuffle 유무를 지정해 줄 수 있다.<br>
-        &nbsp; - &nbsp; 예를 들어서 target : [A, B, C, D, E]와 label : [a, b, c, d, e]인 데이터가 있고 Dataset 클래스에서 getitem부분을 {'target : [A], 'label' : [a]}와 같은 형식으로 반환해 줄때 DataLoader(dataset instance, batch_size=2)라면 아래와 같이 된다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; iter 1 : {'target : [A, B], 'label' : [a, b]}  <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; iter 2 : {'target : [C, D], 'label' : [c, d]}  <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; iter 3 : {'target : [ E ], 'label' : [ e ]}  <br>
-        &nbsp; - &nbsp; DataLoader의 파라미터 중 sampler : 데이터를 어떻게 뽑을지 인덱스를 정하는 거 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; [참고할 블로그 - 안수빈 마스터님](https://subinium.github.io/pytorch-dataloader/)<br>
-        &nbsp; - &nbsp; DataLoader의 파라미터 중 collate_fn : data와 label 한 쌍으로 묶여있는 것을 data, label 따로 묶어주는 형태로 변환  <- 데이터 자체의 길이가 동일해야 할 때, 다시 말해서 패딩이 필요한 데이터 들이 섞여 있을때 사용하는 파라미터이다.<br>
+        * weight & biases<br>
+        &nbsp; - &nbsp; 머신러닝 실험을 원할히 지원하기 위한 상용도구 <br>
+        &nbsp; - &nbsp; 협업, code versioning, 실험 결과 기록 등을 제공한다.<br>
+        &nbsp; - &nbsp; MLOps의 대표적인 툴로 저변 확대하는 중이다.<br>
+        &nbsp; - &nbsp; wandb를 사용하기 위한 준비 단계 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; [https://wandb.ai/site](https://wandb.ai/site) 에 가입후 API 키 확인하기 <- 개인 정보에 settings에 보면 확인 할 수 있다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 새로운 프로젝트 생성하기 <- 이때 이름 기억할 필요가 있다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 3. &nbsp; pip 혹은 anaconda로 wandb 패키지 설치 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 4. &nbsp; config 설정 (변수 초기화 및 wnadb.init()에 config파라미터에 초기화한 변수를 넣어준다. + 위에서 만든 프로젝트명 + entity명 등도 추가로 전달해준다.) <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 5. &nbsp; wandb.log()를 통해서 기록 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 6. &nbsp; 위의 사이트에서 위에서 만든 프로젝트에 가면 기록을 볼 수 있다. <br>
         <br>
        
     
