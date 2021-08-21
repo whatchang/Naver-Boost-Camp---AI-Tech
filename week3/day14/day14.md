@@ -1,4 +1,4 @@
-# Day 14 Pytorch 8~19 강
+# Day 14 Pytorch 8~10 강
 
 ## 목차 
 
