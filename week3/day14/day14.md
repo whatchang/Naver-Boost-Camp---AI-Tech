@@ -58,107 +58,113 @@
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; [나중에 코드로 실제 구현할때 참고해 보면 좋을 것 같은 사이트](https://medium.com/daangn/pytorch-multi-gpu-%ED%95%99%EC%8A%B5-%EC%A0%9C%EB%8C%80%EB%A1%9C-%ED%95%98%EA%B8%B0-27270617936b)<br>
         &nbsp; - &nbsp; 사용방법 <br>
 
-                step 1 : sampler 만들기
                 ex)
+
+                step 1 : sampler 만들기
                 train_sampler = torch.utils.data.distributed.DistributedSampler(train_data)
                 shuffle = False
                 pin_memory = True
                 trainloader = torch.utils.data.DataLoader(train_data, batch_size=20, shuffle=True, pin_memory=pin_mempory, num_wokers=3, shuffle=shuffle, sampler=train_sampler)
                 
-                step2 : torch.multiprocessing.spawn을 통해서 <- 이 부분부터 다시 작성하기
+                step2 : torch.multiprocessing.spawn에 우리가 멀티프로세싱 처리를 할 함수와 gpu 개수, 등을 인자로 넘겨주고 함수에서 처리하는데 필요한 argument들도 넣어준다.
 
                 step 3 : 멀티프로세싱 통신 규약 정의하기
                 torch.distributed.init_process_group(backend='nccl', init_method='tcp://127.0.0.1:2568', world_size=gpu 개수, rank=gpu)
 
                 step 4 : DDP 정의
-                1. gpu 선택
-
-        * Pretrained model & transfer learning<br>
-        &nbsp; - &nbsp; transfer learning <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 다른 데이터셋으로 만든 모델을 현재 데이터에 적용<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 일반적으로 대용량 데이터셋으로 만들어진 모델의 성능이 높다. <br>  
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 현재의 DL에서는 가장 일반적인 학습 기법 <br>  
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; backbone architecture가 잘 학습된 모델에서 일부분만 변경하여 학슴을 수행한다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 멘토님께서 다음주 있을 대회에서 '2.기본적으로 pretrained model을 사용하는데 제한은 없다고 합니다.(이부분은 대회마다 조금씩 달라질 수 있다고하네요)' 라고 알려주셨는데 음... 그러면 이 부분의 내용을 잘 듣고 대회때 활용해 봐야겠다! <br><br>
-        &nbsp; - &nbsp; Freezing : pretrained model을 활용시 모델의 일부분을 frozen 시킨다. <- 다른 사람의 모델을 자신의 데이터에 맞게끔 특정 layer부분만 학습시키는 방식<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 가져온 모델에 대해서 자신이 새로 layer를 추가할 수 도 있다. <- 이때 일반적으로 모델을 직접적으로 수정하지 않고 복사를 하여 사본에 변형을 준다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 모델 저장시 .pht를 지양하는게 좋다. <- 기존의 사용하는 확장자이므로 <br>
+                torch.nn.parallel.DistributedDataParallel함수를 통해서 DDP를 정의해주면 된다.
                
-
         <br>
 
-    * 9강 : Monitoring tools for Pytorch
+    * 9강 : Hyperparameter Tuning
         * 개요<br>
-        &nbsp; - &nbsp; 모델을 학습하기 위해서는 일반적으로 긴 학습 시간이 필요하다. 이러한 긴 시간의 학습을 기록들을 모니터링하기 위해서 Tensorboard와 weight & biases(wandb)를 사용한다.<br> 
+        &nbsp; - &nbsp; 좋은 성능을 내기 위해서 좋은 모델과 좋은 데이터의 적당한 양을 가지고 학습을 시킨 후 마지막으로 성능을 올릴 수 있는 방법 중에 하나가 바로 'Hyperparameter Tuning'입니다. <br> 
         <br>
 
-        * Tensorboard<br>
-        &nbsp; - &nbsp; TensorFlow의 프로젝트로 만들어진 시각화 도구 <br>
-        &nbsp; - &nbsp; 학습 그래프, metric, 학습 결과의 시각화 지원 <br>
-        &nbsp; - &nbsp; pytorch도 연결 가능 -> DL 시각화 핵심 도구 <br>
-        &nbsp; - &nbsp; tensorboard에서 저장하는 값 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; scalar : metiric(accurancy, loss 등의 지표) 등 상수 값의 연속(epoch)을 표시<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; graph : 모델의 computational graph 표시 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; histogram : weight 등 값의 분포를 표현<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; image : 예측 값과 실제 값을 비교 표시<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; mesh : 3d 형태의 데이터를 표현하는 도구<br><br>
-        &nbsp; - &nbsp; Tensorboard를 사용하기 위한 준비 단계 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; Tensorboard 기록을 위한 디렉토리 생성 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 기록 생성을 위한 SummaryWriter isstance 생성 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 3. &nbsp; 기록하기 위한 함수들을 이용하여 값을 기록 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 4. &nbsp; %load_ext tensorboard과 %tensorboard  --logdir {logs_base_dir}을 이용하여 juptyer와 같은 notebook형태에서 tensorboard 수행 <- logs_base_dir은 해당 값이 쓰여진 directory path를 뜻한다. <br>
+        * Hyperparameter Tuning<br>
+        &nbsp; - &nbsp; 모델 스스로 학습하지 않는 값은 사람이 지정 -> ex. learning rate, 모델의 크기, optimizer 등 <br>
+        &nbsp; - &nbsp; hyperparameter에 의해서 성능이 크게 좌우될 때도 있었지만 요즘은 큰 폭은 아니지만 어째든 조금이라도 성능에 영향을 준다. <- 마지막까지 최선을 다하기 위해서는 사용해야 한다. <br>
+        &nbsp; - &nbsp; Hyperparameter tuning 방식 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; Grid : hyperparameter의 값의 범위를 일정범위 기준으로 나눠서 찾는 방법.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; Random : hyperparmeter의 값을 무작위로 선택해서 찾는 방법.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; 예전에는 Random 방식을 이용해서 성능이 잘 나오는 구간의 hyperparameter 범위를 찾아주고 그 구간에서 grid를 이용해서 찾아주는 방식을 많이 사용했다고 한다. <- 지금은 베이지안 기법들을 주로 많이 사용한다고 함(<- 논문 이름 : BOHB) <br>
 
         <br>
 
-        * weight & biases<br>
-        &nbsp; - &nbsp; 머신러닝 실험을 원할히 지원하기 위한 상용도구 <br>
-        &nbsp; - &nbsp; 협업, code versioning, 실험 결과 기록 등을 제공한다.<br>
-        &nbsp; - &nbsp; MLOps의 대표적인 툴로 저변 확대하는 중이다.<br>
-        &nbsp; - &nbsp; wandb를 사용하기 위한 준비 단계 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; [https://wandb.ai/site](https://wandb.ai/site) 에 가입후 API 키 확인하기 <- 개인 정보에 settings에 보면 확인 할 수 있다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 새로운 프로젝트 생성하기 <- 이때 이름 기억할 필요가 있다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 3. &nbsp; pip 혹은 anaconda로 wandb 패키지 설치 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 4. &nbsp; config 설정 (변수 초기화 및 wnadb.init()에 config파라미터에 초기화한 변수를 넣어준다. + 위에서 만든 프로젝트명 + entity명 등도 추가로 전달해준다.) <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 5. &nbsp; wandb.log()를 통해서 기록 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 6. &nbsp; 위의 사이트에서 위에서 만든 프로젝트에 가면 기록을 볼 수 있다. <br>
+        * Ray<br>
+        &nbsp; - &nbsp; multi-node multi processing 지원 모듈 <br>
+        &nbsp; - &nbsp; ML/DL의 병렬 처리를 위해 개발된 모듈<br>
+        &nbsp; - &nbsp; 기본적으로 현재의 분산병렬 ML/DL 모듈의 표준<br>
+        &nbsp; - &nbsp; Hyperparameter Search를 위한 다양한 모듈 제공 <br>
+        &nbsp; - &nbsp; 사용 방법 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; config에 search space를 지정해 준다. <- 찾고자 하는 hyperparameter와 값의 범위 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 학습 스케줄링 알고리즘 지정<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 3. &nbsp; 결과 출력 양식 지정 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 4. &nbsp; 병렬 처리 양식으로 학습 시행 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; Ray와 tensorboard, wandb를 같이 사용하면 눈으로 보기 용이하다. <- 함께 사용하는 것을 권장<br><br>
+        
+        * 조금 더 알아보기<br>
+        &nbsp; - &nbsp; 4학년 1학기때 했던 프로젝트에서는 Optuna라는 모듈을 사용해서 hyperparameter를 찾았는데 Ray와 Optuna는 어떻게 다른 걸까? 그리고 어떤 상황에서 어떤 것이 더 좋을까? <br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 0. &nbsp; 들어가기에 앞서서 알아야 하는 부분<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; Ray를 hyperparameter를 찾기 위한 모듈로 사용하는 이유는 hyperparameter를 찾는 방식 자체가 여러 값들을 대입해 보고 성능이 어떻게 나왔는지 파악하면서 최고의 성능을 찾는 방식이기 때문이다. 즉, 다시 말해서 값만 다르게 하고 찾는 알고리즘을 동일하게 줘서 병렬적으로 처리를 해주면 된다는 말이다. <- 그래서 Ray를 multi processing 지원 모듈이라고 소개한 것 같다.<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; 어떻게 다를까?<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; Ray는 HyperParameter Optimization Library들이 병렬적으로 일을 처리해줄 수 있게 도와주는 역할을 하는 것 같다(<- 제가 글을 읽고 이해한 것을 바탕으로 적은 것이기 때문에 아닐 수도 있습니다). 그렇기 때문에 optuna를 병렬적으로 돌려서 hyperparameter를 찾고 싶다면 ray를 이용하면 되지 않을까 싶다.<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 어떤 상황에서 어떤 것이 더 좋을까?<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; 이 부분은 TMI이고 정확하지 않지만 블로그와 여러 사이트를 참고한 결과 Tune과 RaySGD를 사용하는 것이 좋아보인다.
+        왜냐하면 Tune같은 경우는 High level HPO로 low level인 HyperOpt와 Optuna를 내부적으로 import하여 사용하고 있고 이것들을 통합하여 Ray core위에서 분산/병렬화를 가능하게 해주기 대문이다. 또 RaySGD는 DDP를 위한 Ray기반 Library인며 tensoflow와 pytorch와 같은 framwork에서도 쉽게 통합 가능하며 Tune과 같은 HPO와도 통합되어 사용될 수 있기 때문이다.
+        <br>
+        <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 참고한 사이트 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; [주로 여기서 ray에 대한 개념 및 역사 등을 알 수 있었습니다.](https://riiidtechblog.medium.com/ray-%ED%99%95%EC%9E%A5-%EA%B0%80%EB%8A%A5%ED%95%9C-%EA%B3%A0%EC%84%B1%EB%8A%A5-%EB%B6%84%EC%82%B0-%EB%B3%91%EB%A0%AC-machine-learning-%ED%94%84%EB%A0%88%EC%9E%84%EC%9B%8C%ED%81%AC-f17f9c9cbef3)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; [Ray 사용법에 대해서 참고하면 좋을 것 같은 사이트 - 변성윤 마스터님 블로그 입니다.](https://zzsza.github.io/mlops/2021/01/03/python-ray/)<br>
         <br>
 
-    * 10강 : Monitoring tools for Pytorch
+    * 10강 : Pytorch Troubleshooting
         * 개요<br>
-        &nbsp; - &nbsp; 모델을 학습하기 위해서는 일반적으로 긴 학습 시간이 필요하다. 이러한 긴 시간의 학습을 기록들을 모니터링하기 위해서 Tensorboard와 weight & biases(wandb)를 사용한다.<br> 
+        &nbsp; - &nbsp; OOM(Out Of Memory) : 대량의 메모리를 이용할 경우 시스템의 메모리가 부족할 경우 os에 따라 프로그램을 강제로 종료하는 경우가 발생하는데 이러한 것을 OOM이라고 한다.<br> 
+        &nbsp; - &nbsp; OOM을 해결하기 어려운 이유들<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 왜 발생했는지 알기 어렵다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 어디서 발생했는지 알기 어렵다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Error backtracking이 이상한데로 간다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 메모리의 이전상황의 파악이 어렵다. <br>
+        <br>
+        &nbsp; - &nbsp; OOM 해결 방안<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Batch size를 줄인다. -> GPU를 clean해준다. -> Run <br>
         <br>
 
-        * Tensorboard<br>
-        &nbsp; - &nbsp; TensorFlow의 프로젝트로 만들어진 시각화 도구 <br>
-        &nbsp; - &nbsp; 학습 그래프, metric, 학습 결과의 시각화 지원 <br>
-        &nbsp; - &nbsp; pytorch도 연결 가능 -> DL 시각화 핵심 도구 <br>
-        &nbsp; - &nbsp; tensorboard에서 저장하는 값 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; scalar : metiric(accurancy, loss 등의 지표) 등 상수 값의 연속(epoch)을 표시<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; graph : 모델의 computational graph 표시 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; histogram : weight 등 값의 분포를 표현<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; image : 예측 값과 실제 값을 비교 표시<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; mesh : 3d 형태의 데이터를 표현하는 도구<br><br>
-        &nbsp; - &nbsp; Tensorboard를 사용하기 위한 준비 단계 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; Tensorboard 기록을 위한 디렉토리 생성 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 기록 생성을 위한 SummaryWriter isstance 생성 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 3. &nbsp; 기록하기 위한 함수들을 이용하여 값을 기록 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 4. &nbsp; %load_ext tensorboard과 %tensorboard  --logdir {logs_base_dir}을 이용하여 juptyer와 같은 notebook형태에서 tensorboard 수행 <- logs_base_dir은 해당 값이 쓰여진 directory path를 뜻한다. <br>
+        * 그 외에 발생할 수 있는 문제들 해결하는 방법<br>
+        &nbsp; 1. &nbsp;GPU Util 사용하기 : iter나 epoch에 따라 메모리의 상태를 확인하여 문제를 예방하기 위한 용도<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; nvidia=smi처럼 GPU의 상태를 보여주는 모듈 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Colab은 환경에서 GPU 상태를 보여주기 때문에 편함 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; iter마다 메모리가 늘어나는지 확인할 수 있다. <br>
+        &nbsp; 2. &nbsp; torch.cuda.empty_cache() <- 자바의 가비지 콜렉터와 같은 역할 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 사용되지 않은 GPU상 cache를 정리 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 가용 메모리를 확보<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; del과는 구분이 필요 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; reset 대신 쓰기 좋은 함수<br><br>
+        &nbsp; 3. &nbsp; trainning loop에 tensor로 축적 되는 변수는 확인할 것! <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; tensor로 처리된 변수는 GPU상에 메로리 사용 <- backward와 같이 이전의 loss값은 1번만 이용하지만 해당 값은 메모리에 계속 남아있게 된다 이러한 것은 아래와 같은 메모리를 잠식하는 문제점을 발생시킨다. <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 해당 변수 loop 안에 연산에 있을 때 GPU에 computational graph를 생성(메모리 잠식) <- 파이썬의 기본 객체로 만들어 주기 : .itm(), float()등을 이용 <br>
+        <br>
+        &nbsp; 4. &nbsp; del 명령어를 적절히 사용하기 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 필요가 없어진 변수는 적절한 삭제가 필요하다. 특히 pytho의 메모리 배치 특성상 loop이 끝나도 메모리를 차지하는데 이때 del을 이용하여 없애주자!<br><br>
+        &nbsp; 5. &nbsp; 가능 batch 사이즈 실험해보기 <- 위의 개요에서 언급한 내용 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 학습시 OOM이 발생했다면 batch 사이즈를 1로 해서 실험해보기 <br>
+        <br>
+        &nbsp; 6. &nbsp; torch.no_grad() 사용하기 <- 3에서 언급한 문제를 해결할 수 있다.  <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Inference 시점에서는 torch.no_grad() 구문을 사용<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; backward pass로 인해 쌓이는 메모리에서 자유롭다.<br>
+        <br>
+        &nbsp; 7. &nbsp; 예상치 못한 에러 메시지 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; OOM 말고도 유사한 에러들이 발생한다. <- CUDNN_STATUS_NOT_INIT이나 device-side-assert 등 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 해당 에러도 cuda와 관련하여 OOM의 일종으로 생각될 수 있으며, 적절한 코드 처리가 필요하다. <br>
+        <br>
+        &nbsp; 8. &nbsp; 그외... <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; colab에서 너무 큰 사이즈는 실행하지 말 것 <- 예를 들어서  linear, CNN, 특히 LSTM(backpropagation때 너무 많은 메모리를 사용한다.)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; CNN의 대부분의 에러는 크기가 안 맞아서 생기는 경우 <- torchsummary 등으로 사이즈를 맞출 것 <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; tensor의 float precision을 16bit로 줄일 수 도 있다.<br>
 
         <br>
-
-        * weight & biases<br>
-        &nbsp; - &nbsp; 머신러닝 실험을 원할히 지원하기 위한 상용도구 <br>
-        &nbsp; - &nbsp; 협업, code versioning, 실험 결과 기록 등을 제공한다.<br>
-        &nbsp; - &nbsp; MLOps의 대표적인 툴로 저변 확대하는 중이다.<br>
-        &nbsp; - &nbsp; wandb를 사용하기 위한 준비 단계 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; [https://wandb.ai/site](https://wandb.ai/site) 에 가입후 API 키 확인하기 <- 개인 정보에 settings에 보면 확인 할 수 있다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 새로운 프로젝트 생성하기 <- 이때 이름 기억할 필요가 있다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 3. &nbsp; pip 혹은 anaconda로 wandb 패키지 설치 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 4. &nbsp; config 설정 (변수 초기화 및 wnadb.init()에 config파라미터에 초기화한 변수를 넣어준다. + 위에서 만든 프로젝트명 + entity명 등도 추가로 전달해준다.) <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 5. &nbsp; wandb.log()를 통해서 기록 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 6. &nbsp; 위의 사이트에서 위에서 만든 프로젝트에 가면 기록을 볼 수 있다. <br>
-        <br>
-       
     
 
 ### 2. 과제 수행 과정 / 결과물 정리
