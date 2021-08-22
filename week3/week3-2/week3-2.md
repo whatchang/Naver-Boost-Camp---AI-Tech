@@ -8,7 +8,7 @@
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; <br>
 -->
 
-# week3-1 필수과제 1~2
+# week3-2 필수과제 1~2
 
 ## 목차 
 
@@ -135,48 +135,54 @@
 
 * 필수 과제 2
     * DataSet class
-        * __ init __ <br>
-        * __ len __ <br>
-        * __ getitem __ <br>
+        * __ init __ : 데이터의 위치나 파일명과 같은 초기화 작업을 위해 동작 <br>
+        * __ len __ : Dataset의 최대 요소 수를 반환하는데 사용 <br>
+        * __ getitem __ : 데이터셋의 idx번째 데이터를 반환하는데 사용 <br>
         <br>
 
     * DataLoader class
-        * batch_size<br>
-        * shuffle<br>
-        * sampler<br>
-        * batch_sampler<br>
-        * num_worker<br>
-        * collate_fn<br>
-        * pin_memory<br>
-        * drop_last<br>
-        * timeout<br>
-        * worker_init_fn<br>
+        * dataset : Dataset 인스턴스가 들어감<br>
+        * batch_size : 배치 사이즈를 설정<br>
+        * shuffle : 데이터를 shuffle하여 사용할지 선택<br>
+        * sampler : sampler는 index를 컨트롤<br>
+        * batch_sampler : 위와 비슷한 내용<br>
+        * num_worker : 데이터를 불러올때 사용하는 서브 프로세스 개수<br>
+        * collate_fn : map-style 데이터셋에서 sample list를 batch 단위로 바꾸기 위해 필요한 기능<br>
+        * pin_memory : Tensor를 CUDA 고정 메모리에 할당<br>
+        * drop_last : 마지막 batch를 사용 여부<br>
+        * timeout : data를 불러오는데 제한시간<br>
+        * worker_init_fn : 어떤 worker를 불러올 것인가를 리스트로 전달<br>
         <br>
 
     * torchvision
-        * transform을 하는 이유<br>
+        * transform을 하는 이유 : 학습을 위해서는 고정된 입력값이 보장되어야 한다. 하지만 수집된 데이터들이 각각의 사이즈가 다를수 있다. 예를 들어서 강아지 이미지 데이터 모음이 있을때 어떤 데이터는 300 * 300이고 다른 데이터는 400 * 300 일 수 있다. 이와 같이 사이즈가 다른 것을 방지해주기 위해서 Resize와 같은 함수를 사용하는데 이러한 처리를 해주는 함수들이 torchvision.transform에 많이 있다.<br>
         * torchvision에서 제공하는 tranform함수들<br>
-            &nbsp; - &nbsp; torchvision.transforms.Resize<br>
-            &nbsp; - &nbsp; torchvision.transforms.RandomCrop<br>
-            &nbsp; - &nbsp; torchvision.transforms.RandomRotation<br>
-            &nbsp; - &nbsp; torchvision.transforms.ToTensor<br>
-            &nbsp; - &nbsp; torchvision.transforms.Compose<br>
+            &nbsp; - &nbsp; torchvision.transforms.Resize : 이미지의 사이즈를 변환해준다.<br>
+            &nbsp; - &nbsp; torchvision.transforms.RandomCrop : 이미지를 임의의 위치에서 자른다.<br>
+            &nbsp; - &nbsp; torchvision.transforms.RandomRotation : 이미지를 임의의 각도만큼 회전시킨다.<br>
+            &nbsp; - &nbsp; torchvision.transforms.ToTensor : 이미지 값을 tensor형태로 변환해준다.<br>
+            &nbsp; - &nbsp; torchvision.transforms.Compose : Compose안에 구성된 transform을 순서대로 적용시킨다.<br>
 
 
     * torchtext
-        * 사용목적<br>
+        * 사용목적 : 텍스트 단어를 dict형태로 처리해주기 위해서 사용하는 것 같다. <- 정확하지 않음.<br>
         * torchtext.vacob<br>
-            &nbsp; - &nbsp; torchtext.vocab.vocab<br>
-            &nbsp; - &nbsp; torchtext.vacab.get_itos()<br>
-            &nbsp; - &nbsp; torchtext.vacab.get_stoi()<br>
+            &nbsp; - &nbsp; torchtext.vocab.vocab : Oder_dict와 vocab에 들어가야 하는 최소 빈도의 토큰을 설정해주면  Vocab instance를 생성해준다.<br>
+            &nbsp; - &nbsp; torchtext.vacab.get_itos() : Vocab instance를 list 형태로 반환해준다. 이때 list의 elements는 string이다.<br>
+            &nbsp; - &nbsp; torchtext.vacab.get_stoi() : Vocab instance를 dict형태로 반환해 준다. 이때 key는 string이고 value는 index이다.<br>
 
 
         * torchtext.data.utils<br>
-            &nbsp; - &nbsp; torchtext.data.utils.get_tokenizer<br>
+            &nbsp; - &nbsp; torchtext.data.utils.get_tokenizer : tockenizer 방식을 정해준다. 만약 공백을 인자로 주면 split기준으로 token을 만들고 'basic_english'를 주면 영어 단어 기준으로 token을 만든다.<br>
 
     * tqdm
-        * 사용목적<br>
-        * tqdm.pandas<br>
+        * 사용목적 : 상태 진행률을 시각적으로 보기 위해서 사용<br>
+        * tqdm.pandas : 이 함수를 쓰면 pandas에서 처리하는 동작의 진행률을 시각적으로 볼 수 있다. 예를 들어서 pandas dataframe인 A에 어떤 함수를 사용하여 처리하는 진행 상태를 보고 싶다면 .progress_apply함수 안에 처리 진행률을 보고 싶은 업무/함수를 넣으면 된다.<br>
+
+    * Hugging face : 주로 NLP쪽에서 많이 사용하는 모듈로 다양한 transformer를 기반으로 하는 모델과 학습 스크립트들이 많이 구현 되어 있다.
+        * 장점 : high level로 모듈화가 되어 있기 때문에 optimizer, lr schedule, tensorboard, gpu 병렬 처리 등을 따로 구현하지 않고 인자값만 넘겨주는 것으로 대체할 수 있다.
+        * 단점 : high level로 모듈화가 되어 있어서 모듈을 커스텀마이징 하기 어렵다. -> 하고 싶다면 해당 모델의 소스코드를 참고하여 원하는 class를 상속 받아 overiding을 해야 한다.
+        * [참고 사이트](https://hyunlee103.tistory.com/118)
         
 
 
