@@ -66,13 +66,36 @@
         <br>
 
         * 프로젝트 구조 분석해보기<br>
-        &nbsp; - &nbsp; train.py <br> 
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; argparse를 통해서 옵션을 설정해주고 이러한 정보를 configparser에게 넘겨준다. <br>
-        &nbsp; - &nbsp; 그림으로 그려서 관계 표현하기(과제 끝내고 할 예정) <br> 
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp;  <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp;  <br>
-        &nbsp; - &nbsp; <br>
-        
+        <img src='./img/project1.jpeg'>
+        &nbsp; 1. &nbsp; train.py : training을 위한 main script이다.<br>
+        &nbsp; 2. &nbsp; test.py : 학습된 모델을 평가하기 위한 script<br>
+        &nbsp; 3. &nbsp; config.json : training을 위한 config정보들이 있는 json파일이다.<br>
+        &nbsp; 4. &nbsp; parse_config.py : config 파일과 cli에서 옵션 handling을 위한 script <br>
+        &nbsp; 5. &nbsp; new_project.py : 템플릿 파일로 새로운 프로젝트를 초기화하는 스크립트 <br>
+        &nbsp; 6. &nbsp; base : 추상 클래스들<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 6-1. &nbsp; base_data_loader.py : data_loader에 대한 추상 클래스<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 6-2. &nbsp; base_model.py : model에 대한 추상클래스<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 6-3. &nbsp; base_trainer.py : trainer에 대한 추상 클래스<br>
+        &nbsp; 7. &nbsp; data_loader<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 7-1. &nbsp; data_loaders.py : data를 loader하귀 위한 파이썬 파일<br>
+        &nbsp; 8. &nbsp; data : data들을 넣을 디렉토리<br>
+        &nbsp; 9. &nbsp; model : 모델, loss, metrics가 있는 디렉토리<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 9-1. &nbsp; model.py : 딥러닝 모델<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 9-2. &nbsp; metric.py : 메트릭<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 9-3. &nbsp; loss.py : loss 측정<br>
+        &nbsp; 10. &nbsp; saved<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 10-1. &nbsp; models : 중간중간에 model 저장하기 위한 디렉토리<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 10-2. &nbsp; log : 증간중간 log정보 저장하기 위한 디렉토리<br>
+        &nbsp; 11. &nbsp; trainer<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 11-1. &nbsp; trainer.py : 학습을 수행하는 script <- 여러가지 설정, 모델, 데이터 저장소 및 로깅 방법등을 연결하여 실행<br>
+        &nbsp; 12. &nbsp; logger : logging을 위한 script들이 있는 디렉토리<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 12-1. &nbsp; visualiztion.py<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 12-2. &nbsp; logger.py<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 12-3. &nbsp; logger_config.json<br>
+        &nbsp; 13. &nbsp; utils : 여러가지 utility가 있는 디렉토리<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 13-1. &nbsp; util.py <br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 13-... . &nbsp; 그외 ... <br>
+        [참고 사이트](https://github.com/victoresque/pytorch-template)
         <br> 
 
     
