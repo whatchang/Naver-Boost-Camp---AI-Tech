@@ -47,8 +47,8 @@
         &nbsp;&nbsp;&nbsp;&nbsp; 6. &nbsp; 각 gradient에 대해서 해당 gpu에게 전달 <br>
         &nbsp;&nbsp;&nbsp;&nbsp; 7. &nbsp; 각 gpu들은 backward를 실행해준다.<br>
         &nbsp;&nbsp;&nbsp;&nbsp; 8. &nbsp; 나온 결과를 다시 하나의 gpu에 모아준 후 평균을 취해준다. <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; forward : 1~4번 과정<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; backward : 5~8번 과정<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; forward : 1 ~ 4번 과정<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; backward : 5 ~ 8번 과정<br>
         &nbsp; - &nbsp; Data parallel의 문제점 <br>
         &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 단순히 데이터를 분배한 후에 평균을 취해주는 과정이므로 GPU 사용 불균형 문제와 Batch 사이즈 감소가 된다. <위에서의 예시로는 분배하고 취합해주는 gpu가 더 많은 시간을 사용한다. 그리고 한 gpu가 조금 더 많이 사용하므로써 메모리도 더 사용하게 되므로 다른 gpu중에 batch size가 작은 것이 생기고 이 gpu를 기준으로 batsize를 설정해야 되므로 batch size가 줄어들게 된다)<br>
         &nbsp; - &nbsp; 위의 문제를 해결?하는 방식이 distributed data paralle이다. <- 위의 동작 방식보다 구현이 좀 더 어려움<br>
