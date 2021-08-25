@@ -44,20 +44,22 @@
         &nbsp; - &nbsp; '무조건'이라는 것을 조심하자 -> 모든 데이터는 모든 경우/상황에 따라 다르므로 '무조건 이것은 사용해야 된다'라는 것은 없다.<br>
         <br>
 
-    * 4강 : Hyperparameter Tuning
-        * 개요<br>
-        &nbsp; - &nbsp; 좋은 성능을 내기 위해서 좋은 모델과 좋은 데이터의 적당한 양을 가지고 학습을 시킨 후 마지막으로 성능을 올릴 수 있는 방법 중에 하나가 바로 'Hyperparameter Tuning'입니다. <br> 
+    * 4강 : Data Generation
+        * Data Feeding<br>
+        &nbsp; - &nbsp; Feed의 의미는 '먹이를 주다'이다. -> 그냥 주는 것이 아닌 대상의 상태를 고려해서 적정한 양을 준다. <br> 
+        &nbsp; - &nbsp; 또 다른 예시 : 어떤 제품을 만드는 공정이 있다고 가정할때 설계 -> 제작 -> 포장 단계를 거친다고 하자. 이때 상품의 개수를 늘리기 위해서 제작 공정만 늘린다면 과연 상품의 개수가 많아질까? -> 제작 공정을 늘리면 포장 공정 또한 늘려야 제품의 개수를 많이 만들 수 있다. 만약 포장 공정은 그대로 놔두면 제작은 많이 되더라도 포장할 수 있는 개수가 이전과 같으므로 제품의 개수가 늘어나지 않는다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; 이것을 data feed와 연관지어서 생각해 보면 데이터를 많이 feed한다고 해도 model이 처리할 수 있는 양을 초과할 수 없다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; 모델의 벤치마크 성능을 테스트해보자 -> 효율성을 늘리기 위해서 확인해야 하는 작업<br><br>
+        &nbsp; - &nbsp; 데이터 생성 능력 비교<br>
+        <img src='./img/ex_dataset1.png'>
+        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 데이터의 전처리 순서에 따라 연산에 대한 걸리는 시간도 다를 수 있다.<br>
+
         <br>
 
-        * Hyperparameter Tuning<br>
-        &nbsp; - &nbsp; 모델 스스로 학습하지 않는 값은 사람이 지정 -> ex. learning rate, 모델의 크기, optimizer 등 <br>
-        &nbsp; - &nbsp; hyperparameter에 의해서 성능이 크게 좌우될 때도 있었지만 요즘은 큰 폭은 아니지만 어째든 조금이라도 성능에 영향을 준다. <- 마지막까지 최선을 다하기 위해서는 사용해야 한다. <br>
-        &nbsp; - &nbsp; Hyperparameter tuning 방식 <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; Grid : hyperparameter의 값의 범위를 일정범위 기준으로 나눠서 찾는 방법.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; Random : hyperparmeter의 값을 무작위로 선택해서 찾는 방법.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; => &nbsp; 예전에는 Random 방식을 이용해서 성능이 잘 나오는 구간의 hyperparameter 범위를 찾아주고 그 구간에서 grid를 이용해서 찾아주는 방식을 많이 사용했다고 한다. <- 지금은 베이지안 기법들을 주로 많이 사용한다고 함(<- 논문 이름 : BOHB) <br>
-
-
+        * torch.utils.data<br>
+        &nbsp; - &nbsp; Dataset -> inint, len, getitem으로 구성이 되며 학습시킬 데이터를 전처리 및 반환해주는 역할.<br>
+        &nbsp; - &nbsp; DataLoader -> Dataset을 효율적으로 사용할 수 있도록 관련 기능을 추가 해주는 class <br>
+        &nbsp; - &nbsp; Dataset과 Dataloader는 엄연히 하는 일이 다르다. Dataset이 달라지더라도 DataLoader는 재사용 할 수도 있다.<br>
 
         <br>
     
@@ -65,6 +67,9 @@
 ### 2. Competition
 <br>
 
+#### pretrained model을 사용해보려고 했으나 잘 되지 않았다;;;
+#### 생각해보니까 아마도 마지막 출력부분이 1000이라서 그런 것 같다. 이 부분을 18로 바꿔줘야 하는데 어떻게 해야 될 지 모르겠다 ㅠㅠ 분명 수업때 배웠던 것 같은데....
+#### 일단 오늘은 여기까지 하고 내일 수업을 다시 들으면서 pretrained model을 커스텀마이징 하는 법을 찾아봐야겠다.
 
 
 <br>
@@ -112,3 +117,5 @@
 
 ### 4. 학습 회고
 
+#### pretrained 모델에 관련해서 아직 사용해보지 못했지만 내일 좀 더 삽질하면서 사용해볼 예정이다.
+#### 오늘도 수고 많았고 내일도 화이팅~~~!
