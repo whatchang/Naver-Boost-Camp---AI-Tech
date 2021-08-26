@@ -1,3 +1,13 @@
+<!--
+구조
+*
+    *
+        * <br>
+            &nbsp; - &nbsp; <br>
+                &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; <br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; <br>
+-->
+
 # Day 17 이미지 분류 5~6 강
 
 ## 목차 
@@ -20,50 +30,48 @@
 
 * 이미지 분류 5~6강
     * 5강 : Model 1
-        * nn.Module<br>
-        &nbsp; - &nbsp; U_Staage에서 배운 이론을 토대로 대회형식으로 실습하는 과정이다. 즉, 경진대회를 통해서 배운 이론을 직접 코드로 작성하여 익히는 과정이다. <br>
-        <br>
+        * pytorch<br>
+       &nbsp; - &nbsp; low-level, pythonic, flexibility -> 커스텀마이징이 쉽다. 자유도👍<br>
+       * nn.Module<br>
+       &nbsp; - &nbsp; 기본적으로 init, forward를 구현해야 한다. init은 모델의 layer를 forward는 순전파 순서및 넘기는 값들에 대한 정의이다.<br>
+       &nbsp; - &nbsp; init에서 또 다른 nn.Module을 이용하여 모델을 만든다. -> 모듈을 정의하고 그 모듈을 다른 모듈을 만들때 사용할 수 있다.<br>
+       &nbsp; - &nbsp; 모델은 파라미터를 가지고 있다. WX+b와 같이, 이때 W와 b가 파라미터이다.<br> 
+       &nbsp; - &nbsp; forward는 모듈이 호출되었을때 실행이 된다. forward함수를 호출해도 실행이 된다. -> 호출시 역할은 순전파한다.<br>
+       * nn.Module.Family<br>
+       &nbsp; - &nbsp; 모든 nn.Module은 child modules를 가질 수 있다. -> 내 모델의 정의하는 순간, 그 모델에 연결된 모든 module을 확인할 수 있다.<br>
+       &nbsp; - &nbsp; forward 함수의 경우 해당 모듈의 forward가 한 번만 실행되도 그 모듈의 child modules의 forward가 전부 실행된다.
+       * Parameters <br>
+       &nbsp; - &nbsp; 모델의 정의되어 있는 modules가 가지고 있는 계산에 쓰일 Parameter<br>
+       &nbsp; - &nbsp; state_dict(), parameters()를 통해서 모듈의 파라미터의 tensor값들을 볼 수 있다. 이 둘의 차이는 state_dict는 dictionary형태이고 parameters는 list형태이다. -> 이러한 형식과 구조를 미리 알고 있다면 여러 방면으로 응용이 가능하다! <- pythonic하다는 것의 장점<br>
+       &nbsp; - &nbsp; 각 모델 파라미터들은 data, grad, requires_grad 변수 등을 가지고 있습니다.<br>
 
-        * Overview에 주목하자!<br>
-        &nbsp; - &nbsp; 해결해야 하는 문제가 무엇인지 확인하자. <- 어느 분야의 문제인지, 어떤 부분이 해결해야 되는 문제인지 등<br>
-        &nbsp; - &nbsp; overview를 통해서 대회를 개최한 배경에 대해서 알게 되면 학습 및 데이터를 활용할때 도움이 된다.<br><br>
-        &nbsp; - &nbsp; 문제 정의하기!<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 내가 지금 풀어야 할 문제가 무엇인지? <br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 이 문제의 input과 output은 무엇인가?<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 이 솔루션은 어디서 어떻게 사용되는지는가?<br><br>
-        &nbsp; - &nbsp; data description을 잘 읽자!<br><br>
-        &nbsp; - &nbsp; 등수도 중요하지만 성장(배움)도 중요하다! 서로의 지식을 공유하자!<br>
-        <br>
+       <br>
 
-        * 내가 P_Stage에서 얻고자 하는 것 생각해보기 <br>
-        &nbsp; - &nbsp; 등수가 목적이 아닌 __배움이 목적__ 인 것을 잊지 말자!!!!(매우 중요)<br>
-        &nbsp; - &nbsp; 데이터 전처리부터 ~ 데이터 학습 및 평가까지 코드 스스로 작성 해보기<br>
-        &nbsp; - &nbsp; 위에서 작성하는 각 부분마다 어떤점을 주의해야 하고 어떤 부분에서 내가 실수를 많이 하는지 파악하기<br>
-        &nbsp; - &nbsp; pre_trained 모델도 사용해 보고 augmentation도 해보고 parameter tuning도 해보고 이것저것 해보면서 경험쌓기<br>
+    * 6강 : Model 2 - Pretrained Model
+        * Computer Vision의 발전<br>
+        &nbsp; - &nbsp; ImageNet 대회의 질 좋은 데이터가 computer vision에서 획기적인 알고리즘 개발을 위한 토대가 되었다.<br> 
+        <img src='./img/imagenet.png'>
+        <br><br>
 
-        * 이번 competition에서 내 스스로 주의할 점<br>
-        &nbsp; - &nbsp; 남과 비교하지 않기 -> 차리리 잘하는 사람보고 '나도 저렇게 잘 하고 싶디.... 그러니까 기초부터 차근차근 쌓아서 지금보다 더 발전해야지'라는 생각으로 동기부여 받는 정도로만 생각하기, 결코 못난 내 자신 비하하지 않기!<br>
-        &nbsp; - &nbsp; 피어세션때 다른 사람이 말하는 내용 중에 모르는 내용이나 competition 코드 어렵거나 해결이 잘 안되는 문제에 대해서 적극적으로 질문하기! -> 절대로 아는척 가만히 있지 않기! 모르는 건 꼭 질문! <br>
-        &nbsp; - &nbsp; 다음 날 지장이 갈 만큼 무리하지 말기! -> 저번에 약속한 취침시간 꼭 지키기!<br>
-
-        <br>
-
-    * 6강 :  EDA(Explorary Data Analysis)
-        * EDA란?<br>
-        &nbsp; - &nbsp; 데이터를 이해하기 위한 노력<br> 
-        <br>
-
-        * 어떻게 해야 할까?<br>
-        &nbsp; - &nbsp; EDA를 주어진 데이터에 대한 자신의 생각을 채워넣는 서술형 문제라고 생각하면 좋다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; 자신만의 생각/방식으로 접근<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; - &nbsp; EDA에 정답은 없다. -> 여러 방식으로 접근해보면서 자신의 방식을 만들자!<br>
-        <br>
+        * pretrained model<br>
+        &nbsp; - &nbsp; 모델의 일반화를 위해 매번 수 많은 이미지를 학습시키는 것은 어렵고 비효율적이다. -> 그렇기 때문에 좋은 품질의 데이터로 대량으로 학습된 모델을 이용하자! -> 이 모델을 우리의 목적에 맞게 잘 다듬자.<br>
+        &nbsp; - &nbsp; torchvision.models를 이용해서 손쉽게 pretrained 모델과 weight를 가져올 수 있다.<br>
 
         <br>
 
-        * 마스터님이 생각하는 EDA란<br>
-        &nbsp; - &nbsp; 데이터를 분석하기 위한 모든 접근 방식<br>
-        &nbsp; - &nbsp; 화련한 코드 거창한 생각등이 아닌 자신이 데이터를 보고 의문점이 듣는 거에 대해서 파헤치면서 데이터를 이해하는 것! -> 파헤치기 위한 도구가 코드일뿐 코드 말고 다른 방식을 사용해도 된다! 그러니 너무 겁먹지 말자!<br>
+        * transfer learning : 우리 목적에 맞게 pretrained model 사용하기<br>
+        &nbsp; - &nbsp; ex) CNN pretrained model을 가지고 설명<br>
+        <img src='./img/ex_cnn1.png'>
+        &nbsp; - &nbsp; 위와 같이 pretrained model이 backbone + classifier로 구성이 되어 있다고 가정하자<br>
+        &nbsp; - &nbsp; 그리고 위의 모델은 어떤 문제를 해결하기 위해 classifier에서 어떤 카테고리를 output해주는지 내가 해결하기 위한 카테고리가 이 모델이 해결하고자 하는 문제에 겹치는 부분이 많은지 등을 생각해야 한다. -> pretraining할 때 설정했던 문제와 현재 문제와의 유사성을 생각해봐야 한다.<br>
+        &nbsp; - &nbsp; 이때 아래와 같이 case별로 전략을 짜면 좋다.<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; 문제를 해결하기 위한 데이터가 충분하다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1-1. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하다. -> backbone은 freeze해주고 classifer만 학습시켜주면 된다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1-2. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하지 않다. -> backbone ~ classfier를 학습시켜줘야한다.<br><br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 문제를 해결하기 위한 데이터가 충분하지 않을 경우.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2-1. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하다. -> backbone은 freeze해주고 classifer만 학습시켜주면 된다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2-2. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하지 않다. -> pretrained model을 사용하지 않는게 좋다. -> 새로운 모델을 만들어서 사용하거나 다른 pretrained model을 찾아야 한다.<br>
+        
         
 
         <br>
