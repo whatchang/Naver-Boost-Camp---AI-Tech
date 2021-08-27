@@ -29,25 +29,32 @@
 ### 1. 강의 내용 정리
 
 * 이미지 분류 7~8강
-    * 7강 : Model 1
-        * pytorch<br>
-       &nbsp; - &nbsp; low-level, pythonic, flexibility -> 커스텀마이징이 쉽다. 자유도👍<br>
-       * nn.Module<br>
-       &nbsp; - &nbsp; 기본적으로 init, forward를 구현해야 한다. init은 모델의 layer를 forward는 순전파 순서및 넘기는 값들에 대한 정의이다.<br>
-       &nbsp; - &nbsp; init에서 또 다른 nn.Module을 이용하여 모델을 만든다. -> 모듈을 정의하고 그 모듈을 다른 모듈을 만들때 사용할 수 있다.<br>
-       &nbsp; - &nbsp; 모델은 파라미터를 가지고 있다. WX+b와 같이, 이때 W와 b가 파라미터이다.<br> 
-       &nbsp; - &nbsp; forward는 모듈이 호출되었을때 실행이 된다. forward함수를 호출해도 실행이 된다. -> 호출시 역할은 순전파한다.<br>
-       * nn.Module.Family<br>
-       &nbsp; - &nbsp; 모든 nn.Module은 child modules를 가질 수 있다. -> 내 모델의 정의하는 순간, 그 모델에 연결된 모든 module을 확인할 수 있다.<br>
-       &nbsp; - &nbsp; forward 함수의 경우 해당 모듈의 forward가 한 번만 실행되도 그 모듈의 child modules의 forward가 전부 실행된다.
-       * Parameters <br>
-       &nbsp; - &nbsp; 모델의 정의되어 있는 modules가 가지고 있는 계산에 쓰일 Parameter<br>
-       &nbsp; - &nbsp; state_dict(), parameters()를 통해서 모듈의 파라미터의 tensor값들을 볼 수 있다. 이 둘의 차이는 state_dict는 dictionary형태이고 parameters는 list형태이다. -> 이러한 형식과 구조를 미리 알고 있다면 여러 방면으로 응용이 가능하다! <- pythonic하다는 것의 장점<br>
-       &nbsp; - &nbsp; 각 모델 파라미터들은 data, grad, requires_grad 변수 등을 가지고 있습니다.<br>
+    * 7강 : Training
+        * Loss<br>
+       &nbsp; - &nbsp; 복습 : error backpropagation<br>
+       <img src='./img/loss.png'><bt>
+       &nbsp; - &nbsp; loss에 대한 것도 nn.패키지에 구현이 되어있다.<br>
+       &nbsp; - &nbsp; 관용적으로 criterion에 loss 함수를 정의해 주고 input값에 forward 결과와 실제값을 넣어줘서 loss를 구해주고 loss.backward()를 해주면 backpropagation이 진행된다. -> 이것이 가능한 이유는 pytorch의 경우 forward를 해주면 input부터 시작해서 각 모듈들을 지나 output가지 체인이 형성이 되는데 이것을 criterion에 input으로 줘서 만들어진 loss또한 같은 체인을 갖고 있게 되고 이 체인을 이용했기 때문에 backpropagation이 가능한 것이다.<br>
+       &nbsp; - &nbsp; 특별한 loss들<br>
+       &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Focal Loss : Class Imabalance문제가 있는 경우, 맞출 확률이 높은 class는 조금의 loss를 맞추기 어려운 classsms loss를 높게 부여한다. -> 즉 class의 분포정도에 따라 loss에 가중치를 두자는 것!<br>
+       &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Label smoothing loss : class target label을 onehot ㅠㅛ현으로 사용하기 보다는 조금 soft하게 표현해서 일반화 성능을 높이기 위함. -> [0, 1, 0, 0, ...] -> [0.025, 0.025, 0.9, 0.025, ...]<br>
+       <br>
+
+       * optimizer<br>
+       &nbsp; - &nbsp; loss가 0인 부분을 찾기 위해서 어느 방향으로 얼마나 움직일지를 정한다.<br>
+       &nbsp; - &nbsp; StepLR : 특정 step마다 LR감소<br>
+       &nbsp; - &nbsp; CosineAnnealingLR : Cosine 함수 형태처럼 LR을 급격히 변경한다.<br>
+       &nbsp; - &nbsp; ReduceLROnPlateau : 더 이상 성능 향상이 없을때 LR 감소<br>
+        <br>
+
+        * metric : 모델이 일반적으로 봤을때 성능이 어느정도인지 정의하기 위해서 사용한다. <br>
+        &nbsp; - &nbsp; 모델의 평가 - 학습에 직접적으로 사용되는 것은 아니지만 학습된 모델을 객관적으로 평가할 수 있는 지표가 필요하다.<br>
+        <img src='./img/metric.png'>
+        &nbsp; - &nbsp; 모델의 정확도를 평가할때 해당 target의 class 분포에 따라서 적용하는 방식을 달리해야 할때가 있다. 이때는 단순히 맞은 개수를 전체 개수로 나누는게 아니라 적은 각 class별로 어느 정도 맞췄는지, 그것을 평균내면 전체적으로 어느정도 맞췄는지를 평가하는 지표를 사용해야 한다.<br>
 
        <br>
 
-    * 8강 : Model 2 - Pretrained Model
+    * 8강 : Inference
         * Computer Vision의 발전<br>
         &nbsp; - &nbsp; ImageNet 대회의 질 좋은 데이터가 computer vision에서 획기적인 알고리즘 개발을 위한 토대가 되었다.<br> 
         <img src='./img/imagenet.png'>
@@ -98,19 +105,53 @@
 
 ### 3. 피어세션 정리
 <br>
-20210825 피어세션
-<br>
+20210826 피어세션
+
 🔍[마스크 데이터 분류 대회]
 
-* out of memory 문제 -> batch size를 조정하니까 해결이 되었다.
-* Hidden file 은 삭제해도 되는가 ? -> 보안때문에 해놓은것으로 올라왔다.
-* Training Acc와 Val Acc는 잘 나오는데 Test에서는 잘 안나온다 ? -> 오버 피팅 가능성, 우리 Competition에 Transfer Learning의 사용이 맞는지 잘 모르겠다.
-* *이터 불균형 해소 방법으로 적은 데이터의 갯수에 맞춰서 학습을 시키면 되지않나? -> 이걸 under sampling이라고 하는데 이것은 데이터의 손실이 많아서 이보다는 Over Sampling이나 다른 기법들을 사용하는것이 좋을것 같다.
-* Pretrained 모델의 Back bone에서 앞부분의 freeze를 풀고 학습 하면 안되나? -> 원래는 층이 깊어질수록 고차원의 피쳐를 인식할수 있는데 Wide resnet의 경우 깊이를 반을 줄여서, 깊어질수록 좋지는 않다.
-* 데이터에서 label이 잘못 된게 있는데 이걸 확인해보고 있다. -> 아예 다 제외하고 학습 할 것인가, 아니면 고칠것인가 ??
-* EDA Example을 사용해 전처리를 해보았다. -> CV 라이브러리로 얼굴을 찾아주는 기능을 사용해서 바운딩박스를 찾아보도록 해봤다. -> 이를 통해 데이터 대부분의 얼굴들이 가운데 있었던것 같다. -> 마스크를 쓰고있는 데이터의 경우 이 라이브러리에는 학습이 되어있지 않아서 잘 찾지 못했다.
-* 이미지를 흑백으로 바꿔서 학습을 하면 잘 안되는가?? -> 아마 배경의 노이즈에 영향을 많이 받을것 같다.
-* 데이터 셋의 Transform은 매 epoch마다 적용된다.
+* 다양한 시도
+
+    * VGG → DenseNet활용하여 성능 증가
+    * Crop만 진행 → 성능 증가 x
+    * ResNet50활용 (Parameter의 수를 봤을 때, 적절한 것 같다)
+    * Crop진행 → Shape의 문제 발생 → Shape이 같아야 Batch를 뽑아올 수 있는 것으로 보이나 어떻게 Shape을 맞춰줘야 하는지에 대해서는 미지수.
+    * ResNext50_32x4d 활용
+    * 얼굴 위치에 대한 분포도를 바탕으로 평균, 분산을 활용하여 적당한 Crop 진행 → 얼굴이 해당 위치에 있었으면 했지만 잘 나오지는 않음
+    * 전처리를 활용하여 주름을 구분해낼 수 있다.(Contrast, Sharpness, Brightness, Color)
+
+
+* 해 볼 시도
+
+    * OverSampling
+    * SMOTE → 직접 적용하기에 어려움이 있지만 시도 해볼 것이다.
+    * Label이 작은 것을 랜덤 복제하여 Sampling 시도
+
+
+* 질답
+
+KFold는 Data 수가 너무 적을 때, Validation Set의 Robustness를 주기 위해서 활용하는 방안인데 코드에 직접 입력할 때 성능의 개선이 이루어졌다. 왜 그럴까?
+<br><br>
+→ 이전 Fold에서의 개선된 Parameter가 다음 Fold로 이어짐으로서 성능 향상을 나타낸다.
+<br><br>
+Gradient Accumulation에서 Num_Accum으로 loss를 나누어주게 되는데, 왜 이렇게 하는가?
+<br><br>
+→ 이유 모색 후 토의
+<br><br>
+Brightness & Contrast를 활용하여 배경을 아예 흰색으로 만들 수 있지 않을까?
+<br><br>
+→ 일정 임계값 이하일 경우, 배경이 검은색이라면 얼굴이 날아갈 위험이 있다.
+<br><br>
+Focal Loss 직접 활용해 보았는가?
+<br><br>
+→ Weight를 직접 조정할 수 있는데 이것이 Focal Loss의 방법과 유사한 것 같다.
+<br><br>
+서버에서 깃헙으로 바로 업로드하는 방법이 있는가?
+<br><br>
+→ 기존의 방식에서 조금 변화가 있어, 이제는 token을 입력해주면 서버에서 깃헙으로 업로드 할 수 있다.
+<br><br>
+코드 리뷰
+<br><br>
+원진님, 우창님, 성욱님, 승찬님, 범수님
 
 
 
