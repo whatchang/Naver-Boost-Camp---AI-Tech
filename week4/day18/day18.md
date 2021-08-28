@@ -55,29 +55,28 @@
        <br>
 
     * 8강 : Inference
-        * Computer Vision의 발전<br>
-        &nbsp; - &nbsp; ImageNet 대회의 질 좋은 데이터가 computer vision에서 획기적인 알고리즘 개발을 위한 토대가 되었다.<br> 
-        <img src='./img/imagenet.png'>
-        <br><br>
+        * Training Process<br>
+        &nbsp; - &nbsp; model.train() : dropout, batchnormalization에 대해서 train에 맞게 작동시킨다. <-> model.eval()은 eval에 맞게끔 dropout, batchnormalization을 동작시킨다.<br> 
+        &nbsp; - &nbsp; train process<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 0. &nbsp; 1 epoch마다 1번의 학습이 진해된다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; optimzer.zero_grad()를 수행해준다.(이 부분은 맨 처음에 해도 되고 optimizer.step()이후에 해도 된다.) -> 이전 gradient가 이번 학습에 영향을 주지 못하도록 하기 위해서 초기화 시켜준다.-> 이것은 다시 말해서 만약 이전 gradient를 이번에 활용한다면 이것을 해줄 필요가 없다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; loss = criterion(outputs, labels) -> criterion은 이 단계이전에 사용자가 할당해줘야 하는 loss를 측정해주는 방식으로 MSE, BE, CE등이 있다. -> criterion을 통해서 loss가 나오면 이 loss값은 input ~ output까지 chain으로 연결이 되어있다. -> 그 이유는 forward시 input ~ output이 chain으로 연결이 되어있는데 loss는 chain으로 연결되어 있는 output을 사용하기 때문이다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 3. &nbsp; 이렇게 생성된 loss에 backward를 해주면 backpropagation을 해준다.<br>
+        &nbsp;&nbsp;&nbsp;&nbsp; 4. &nbsp; optimizer.step() : loss의 backward 후 optimizer를 step을 하여 weight, bias를 업데이트 해준다.<br>
+        
+        <br>
 
-        * pretrained model<br>
-        &nbsp; - &nbsp; 모델의 일반화를 위해 매번 수 많은 이미지를 학습시키는 것은 어렵고 비효율적이다. -> 그렇기 때문에 좋은 품질의 데이터로 대량으로 학습된 모델을 이용하자! -> 이 모델을 우리의 목적에 맞게 잘 다듬자.<br>
-        &nbsp; - &nbsp; torchvision.models를 이용해서 손쉽게 pretrained 모델과 weight를 가져올 수 있다.<br>
+        * Inference Process<br>
+        &nbsp; - &nbsp; train과 비슷하게 여기서는 model.eval()를 호출해줘야 한다.<br>
+        &nbsp; - &nbsp; evaluation에서는 gradient를 업데이트를 해주지 않게 하기 위해서 with torch.no_grad() 내부에서 평가를 실행해준다. -> torch.no_grad()는 내부적으로 torch.set_grad_enable(False)를 해준다.<br>
+        &nbsp; - &nbsp; validation을 통해서 성능을 확인하거나 checkpoint를 통해서 모델을 저장할 수 있다.<br>
+        &nbsp; - &nbsp; 최종 submission을 csv파일로 생성한다. -> 그 후 제출<br>
 
         <br>
 
-        * transfer learning : 우리 목적에 맞게 pretrained model 사용하기<br>
-        &nbsp; - &nbsp; ex) CNN pretrained model을 가지고 설명<br>
-        <img src='./img/ex_cnn1.png'>
-        &nbsp; - &nbsp; 위와 같이 pretrained model이 backbone + classifier로 구성이 되어 있다고 가정하자<br>
-        &nbsp; - &nbsp; 그리고 위의 모델은 어떤 문제를 해결하기 위해 classifier에서 어떤 카테고리를 output해주는지 내가 해결하기 위한 카테고리가 이 모델이 해결하고자 하는 문제에 겹치는 부분이 많은지 등을 생각해야 한다. -> pretraining할 때 설정했던 문제와 현재 문제와의 유사성을 생각해봐야 한다.<br>
-        &nbsp; - &nbsp; 이때 아래와 같이 case별로 전략을 짜면 좋다.<br><br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; 문제를 해결하기 위한 데이터가 충분하다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1-1. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하다. -> backbone은 freeze해주고 classifer만 학습시켜주면 된다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1-2. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하지 않다. -> backbone ~ classfier를 학습시켜줘야한다.<br><br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 문제를 해결하기 위한 데이터가 충분하지 않을 경우.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2-1. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하다. -> backbone은 freeze해주고 classifer만 학습시켜주면 된다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2-2. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하지 않다. -> pretrained model을 사용하지 않는게 좋다. -> 새로운 모델을 만들어서 사용하거나 다른 pretrained model을 찾아야 한다.<br>
+        * Appendix : pytorch lightning<br>
+        &nbsp; - &nbsp; 대부분의 train 절차(model, training, evalution 등의 과정)를 keras와 같이 쉽게 코딩할수 있도록 변환해주는 패키지<br>
+        &nbsp; - &nbsp; lightning을 사용하기 전!!! 꼭! 이전의 train process ~ evalution까지의 과정을 잘 숙지 및 이해하고 있어야 한다.<br>
         
         
 
