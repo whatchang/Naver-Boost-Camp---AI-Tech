@@ -29,60 +29,56 @@
 ### 1. 강의 내용 정리
 
 * 이미지 분류 9~10강
-    * 9강 : Training
-        * Loss<br>
-       &nbsp; - &nbsp; 복습 : error backpropagation<br>
-       <img src='./img/loss.png'><bt>
-       &nbsp; - &nbsp; loss에 대한 것도 nn.패키지에 구현이 되어있다.<br>
-       &nbsp; - &nbsp; 관용적으로 criterion에 loss 함수를 정의해 주고 input값에 forward 결과와 실제값을 넣어줘서 loss를 구해주고 loss.backward()를 해주면 backpropagation이 진행된다. -> 이것이 가능한 이유는 pytorch의 경우 forward를 해주면 input부터 시작해서 각 모듈들을 지나 output가지 체인이 형성이 되는데 이것을 criterion에 input으로 줘서 만들어진 loss또한 같은 체인을 갖고 있게 되고 이 체인을 이용했기 때문에 backpropagation이 가능한 것이다.<br>
-       &nbsp; - &nbsp; 특별한 loss들<br>
-       &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Focal Loss : Class Imabalance문제가 있는 경우, 맞출 확률이 높은 class는 조금의 loss를 맞추기 어려운 classsms loss를 높게 부여한다. -> 즉 class의 분포정도에 따라 loss에 가중치를 두자는 것!<br>
-       &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Label smoothing loss : class target label을 onehot ㅠㅛ현으로 사용하기 보다는 조금 soft하게 표현해서 일반화 성능을 높이기 위함. -> [0, 1, 0, 0, ...] -> [0.025, 0.025, 0.9, 0.025, ...]<br>
+    * 9강 : Ensemble<br>
+        &nbsp; - &nbsp; 이전에 정리한 내용[week2 day7](../../week2/day7/day7.md)<br>
+        &nbsp; overview : &nbsp; 여러 실험을 통해 얻은 결과물로 또 다른 2차 결과물을 만드는 방법에 대해서 소개<br>
+        * Ensemble 과정<br>
+       &nbsp; - &nbsp; high bias는 boosting해준다.(underfitting) -> 이러한 알고리즘이 GB, XGB, LGBM<br>
+       &nbsp; - &nbsp; high variance는 vaggin방식을 사용해준다.(overfitting) -> data sample을 학습시키고 각 오차나 값의 평균을 사용한다. -> randomforest<br>
+       &nbsp; - &nbsp; voting의 종류<br>
+       &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; hard voting : 다수결 느낌, 각 모델에서 나온 값중에 가장 많이 나온 값을 사용한다.<br>
+       &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; soft voting : 각각의 모델이 값을 추론할때 각 class가 갖는 확률을 다 표시해준다. -> 각 모델에서 예측한 class에 대한 평균을 계산하여 해당 class를 선택한다. <-> hard voting과 다른점은 hard은 one-hot encoding을 통해서 하기 때문에 soft voting처럼 class에 대한 확률값을 다 표시하지 않는다.<br>
+       &nbsp; - &nbsp; Cross Validation<br>
+       &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 사용하는 목적은 train dataset을 train, validation으로 나눠서 학습에 대한 검증을 하기에는 데이터가 너무 아깝기 때문에 validation을 고정시키지 않고 돌아가면서 사용하여 학습시키는 방식이다. -> 이러면 이전의 validation을 학습해서 학습의 검증에 대한 정확도가 줄어들겠지만 데이터를 버리지 않고 아낄 수 있다는 장점이 있다.<br>
+       &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 이때 가능한 모든 class의 분포를 고려해서 train, validation을 나누는 방식을 stratified K-fold cross validataion이라고 한다.<br>
+       &nbsp; - &nbsp; TTA(Test Time Augmentation)<br>
+       &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; test set에 어느정도의 noise를 추가하더라도 일반화된 성능을 낼 수 있는지 평가하기 위해서 사용한다.<br>
+       &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; [TTA 참고해보면 좋은 것 같은 사이트](https://shinminyong.tistory.com/43)<br>
+       &nbsp; - &nbsp; 앙상블 효과는 확실히 있지만 그 만큼 학습, 추론 시간이 배로 소모됨으로 효율성은 떨어진다. 그러므로 상황에 따라서 앙상블을 할지 말지를 잘 판단해서 사용하는 것이 좋다.<br>
        <br>
 
-       * optimizer<br>
-       &nbsp; - &nbsp; loss가 0인 부분을 찾기 위해서 어느 방향으로 얼마나 움직일지를 정한다.<br>
-       &nbsp; - &nbsp; StepLR : 특정 step마다 LR감소<br>
-       &nbsp; - &nbsp; CosineAnnealingLR : Cosine 함수 형태처럼 LR을 급격히 변경한다.<br>
-       &nbsp; - &nbsp; ReduceLROnPlateau : 더 이상 성능 향상이 없을때 LR 감소<br>
+       * Hyperparameter optimization<br>
+       &nbsp; - &nbsp; Hyperparameter : 시스템의 매커니즘에 영향을 주는 주요한 파라미터이자 학습으로 결정되는 파라미터가 아닌 사용자가 지정해줘야 하는 파라미터이다.<br>
+       &nbsp; - &nbsp; 이때 파라미터를 optimization을 해주기 위해서 해당 범위의 경우의 수를 모두 따져보기 때문에 시간이 매우 걸린다. 그렇다고 해서 성능이 많이 상승하는게 아니므로 마지막까지 최선을 다하기 위해서 사용하는 방식이다.<br>
+       &nbsp; - &nbsp; 이러한 hyperparameter optimization을 위한 모듈은 optuna, ray 등이 있고 이 부분에 대해서는 예전에 정리를 해두었다.<br>
+       &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; [week3 day14 optimizer](../../week3/day14/day14.md)<br>
         <br>
-
-        * metric : 모델이 일반적으로 봤을때 성능이 어느정도인지 정의하기 위해서 사용한다. <br>
-        &nbsp; - &nbsp; 모델의 평가 - 학습에 직접적으로 사용되는 것은 아니지만 학습된 모델을 객관적으로 평가할 수 있는 지표가 필요하다.<br>
-        <img src='./img/metric.png'>
-        &nbsp; - &nbsp; 모델의 정확도를 평가할때 해당 target의 class 분포에 따라서 적용하는 방식을 달리해야 할때가 있다. 이때는 단순히 맞은 개수를 전체 개수로 나누는게 아니라 적은 각 class별로 어느 정도 맞췄는지, 그것을 평균내면 전체적으로 어느정도 맞췄는지를 평가하는 지표를 사용해야 한다.<br>
 
        <br>
 
-    * 10강 : Inference
-        * Computer Vision의 발전<br>
-        &nbsp; - &nbsp; ImageNet 대회의 질 좋은 데이터가 computer vision에서 획기적인 알고리즘 개발을 위한 토대가 되었다.<br> 
-        <img src='./img/imagenet.png'>
-        <br><br>
+    * 10강 : Experiment Toolkits & tips
+        * Training Visualization<br>
+        &nbsp; - &nbsp; Tensorboard : 학습과정을 기록하고 트래킹할때 사용하는 visualization tool이다.<br> 
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 사용법<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; --logdir PATH : log가 저장된 경로<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; --host ADDR : 원격 서버에서 사용시 0.0.0.0(default : localhost)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; --port PORT : 포트 번호<br>
+        &nbsp; - &nbsp; weight and bias(wandb) : tensorboard와 비슷하게 학습과정을 기록하고 트래킹하기 위한 visualization tool이다.<br> 
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; 사용법<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; 회원가입<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; wandb login<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; * &nbsp; wandb.init과 wandb.log 설정해주기<br>
+        <img src='./img/wandb.png'><br>
+        <br>
 
-        * pretrained model<br>
-        &nbsp; - &nbsp; 모델의 일반화를 위해 매번 수 많은 이미지를 학습시키는 것은 어렵고 비효율적이다. -> 그렇기 때문에 좋은 품질의 데이터로 대량으로 학습된 모델을 이용하자! -> 이 모델을 우리의 목적에 맞게 잘 다듬자.<br>
-        &nbsp; - &nbsp; torchvision.models를 이용해서 손쉽게 pretrained 모델과 weight를 가져올 수 있다.<br>
+        * Machine Learning Project<br>
+        &nbsp; - &nbsp; Jupyter Noetbook : EDA할 때 매우 편리하다. 하지만 프로세스가 진행되는 과정에서 브라우저 창이 꺼지면 실행이 주지된다. 이러한 점은 원격접속에서 큰 단점으로 적용이 된다.<br>
+        &nbsp; - &nbsp; python idles : 한번만 구현한다면 다른 파일에서 재사용이 가능하다. naviagtion과 depuggin등 강력한 기능이 있다. 또 argmentparser를 통해서 자유로운 실험 핸들링을 할 수 있다.<br>
+
 
         <br>
 
-        * transfer learning : 우리 목적에 맞게 pretrained model 사용하기<br>
-        &nbsp; - &nbsp; ex) CNN pretrained model을 가지고 설명<br>
-        <img src='./img/ex_cnn1.png'>
-        &nbsp; - &nbsp; 위와 같이 pretrained model이 backbone + classifier로 구성이 되어 있다고 가정하자<br>
-        &nbsp; - &nbsp; 그리고 위의 모델은 어떤 문제를 해결하기 위해 classifier에서 어떤 카테고리를 output해주는지 내가 해결하기 위한 카테고리가 이 모델이 해결하고자 하는 문제에 겹치는 부분이 많은지 등을 생각해야 한다. -> pretraining할 때 설정했던 문제와 현재 문제와의 유사성을 생각해봐야 한다.<br>
-        &nbsp; - &nbsp; 이때 아래와 같이 case별로 전략을 짜면 좋다.<br><br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 1. &nbsp; 문제를 해결하기 위한 데이터가 충분하다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1-1. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하다. -> backbone은 freeze해주고 classifer만 학습시켜주면 된다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1-2. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하지 않다. -> backbone ~ classfier를 학습시켜줘야한다.<br><br>
-        &nbsp;&nbsp;&nbsp;&nbsp; 2. &nbsp; 문제를 해결하기 위한 데이터가 충분하지 않을 경우.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2-1. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하다. -> backbone은 freeze해주고 classifer만 학습시켜주면 된다.<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2-2. &nbsp; 해결하고자 하는 문제가 pretrained model과 유사하지 않다. -> pretrained model을 사용하지 않는게 좋다. -> 새로운 모델을 만들어서 사용하거나 다른 pretrained model을 찾아야 한다.<br>
-        
-        
 
-        <br>
-    
 
 ### 2. Competition
 <br>
@@ -102,53 +98,35 @@
 
 ### 3. 피어세션 정리
 <br>
-20210826 피어세션
+20210827 피어세션
 
-🔍[마스크 데이터 분류 대회]
+🔍 질의응답
 
-* 다양한 시도
+* K-fold
+* Boosting & Bagging
+    * boosting : 직렬적
+        * 모델의 성능에 따라 가중치를 줘서 결과를 내는 것
+        * 하나의 모델을 통과하고 다음 모델을 통과할 때 부족한 부분을 개선
+        * Bias가 높을 때 사용
+    * bagging : 병렬적
+        * 각 모델을 통과해서 나온 결과값들을 다수결 또는 가중치를 이용하여 Output 출력
+        * Varience 가 높을 때 사용
+📒 코드리뷰
 
-    * VGG → DenseNet활용하여 성능 증가
-    * Crop만 진행 → 성능 증가 x
-    * ResNet50활용 (Parameter의 수를 봤을 때, 적절한 것 같다)
-    * Crop진행 → Shape의 문제 발생 → Shape이 같아야 Batch를 뽑아올 수 있는 것으로 보이나 어떻게 Shape을 맞춰줘야 하는지에 대해서는 미지수.
-    * ResNext50_32x4d 활용
-    * 얼굴 위치에 대한 분포도를 바탕으로 평균, 분산을 활용하여 적당한 Crop 진행 → 얼굴이 해당 위치에 있었으면 했지만 잘 나오지는 않음
-    * 전처리를 활용하여 주름을 구분해낼 수 있다.(Contrast, Sharpness, Brightness, Color)
+* 성욱 캠퍼님 : Agumentation 추가
+    * EDA를 통해 확인한 Age, Gender 별 데이터 불균형 해소 시도
+    * HorizontalFlip, GausianNoise 등 다양한 transform 이용하여 agumentation 수행
+    * 데이터 회전 시 발생하는 빈 공간 처리는 shift scale rotate 를 사용했다.
+* 진선 캠퍼님 : Age 부분 Classification acc 문제 해결 시도, Data agumentation 수행
+* 원진 캠퍼님: ResNext를 이용하여 acc 개선 시도, Data agumentation 수행
+* 범수 캠퍼님: Bbox 를 이용하여 Data agumentation 계획 및 구상
+* 승찬 캠퍼님: Data agumentation 수행 및 모델 개선 시도
+* 우창 캠퍼님: Underfitting 시도 및 모델, 데이터 갯수, agumentation 여부 등 분석
+📎 향후 팀프로젝트 계획
 
-
-* 해 볼 시도
-
-    * OverSampling
-    * SMOTE → 직접 적용하기에 어려움이 있지만 시도 해볼 것이다.
-    * Label이 작은 것을 랜덤 복제하여 Sampling 시도
-
-
-* 질답
-
-KFold는 Data 수가 너무 적을 때, Validation Set의 Robustness를 주기 위해서 활용하는 방안인데 코드에 직접 입력할 때 성능의 개선이 이루어졌다. 왜 그럴까?
-<br><br>
-→ 이전 Fold에서의 개선된 Parameter가 다음 Fold로 이어짐으로서 성능 향상을 나타낸다.
-<br><br>
-Gradient Accumulation에서 Num_Accum으로 loss를 나누어주게 되는데, 왜 이렇게 하는가?
-<br><br>
-→ 이유 모색 후 토의
-<br><br>
-Brightness & Contrast를 활용하여 배경을 아예 흰색으로 만들 수 있지 않을까?
-<br><br>
-→ 일정 임계값 이하일 경우, 배경이 검은색이라면 얼굴이 날아갈 위험이 있다.
-<br><br>
-Focal Loss 직접 활용해 보았는가?
-<br><br>
-→ Weight를 직접 조정할 수 있는데 이것이 Focal Loss의 방법과 유사한 것 같다.
-<br><br>
-서버에서 깃헙으로 바로 업로드하는 방법이 있는가?
-<br><br>
-→ 기존의 방식에서 조금 변화가 있어, 이제는 token을 입력해주면 서버에서 깃헙으로 업로드 할 수 있다.
-<br><br>
-코드 리뷰
-<br><br>
-원진님, 우창님, 성욱님, 승찬님, 범수님
+* 팀 단위 제출로 인한 제출횟수를 고려하여,
+* 가장 성능이 좋은 모델을 basecode로 하여 각각 다양한 시도를 하는 방향 고려
+📎 팀 회고지 피드백
 
 
 
