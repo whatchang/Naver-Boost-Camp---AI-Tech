@@ -31,6 +31,7 @@
 
 
 ### 2. 학습 회고
+<br>
 
 #### day18 이미지 분류 대회 8강 정리를 끝냈다. 그후에는 DenseNet과 우리 팀에서 성능이 가장 좋았던 모델을 Main으로 삼아서 학습을 시킨후 eval을 통해 나온 csv를 비교 분석을 하였다.
 #### 놀라운 점은 DenszeNet161의 경우 신기하게 기존의 data를 undersampling한게 성능이 더 좋았지만 Main model의 경우에는 undersampling + data augmentation이 더 효과적이었다.
