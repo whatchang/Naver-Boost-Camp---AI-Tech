@@ -23,12 +23,12 @@
 ## 1. 강의내용 정리
 
 * NLP 1강 :  Intro to NLP, Bag-of-Words
-    * 이번 과정의 목적
-        * NLP -> NLU(Natural Language Understanding), NUG(Natural Language Gernerating)로 구성이 된다.
+    * 이번 과정의 목적<br>
+        * NLP -> NLU(Natural Language Understanding), NUG(Natural Language Gernerating)로 구성이 된다.<br>
         * NLP에서 deep learning과 관련되 부분과 language modeling, machine translation, question answering, document classification, dialog systems등을 다룰 예정
     <br>
-    * 학문적으로 나눴을때의 NLP
-        * Natural Language Processing -> conferences : ACL, EMNLP, NAACL
+    * 학문적으로 나눴을때의 NLP<br>
+        * Natural Language Processing -> conferences : ACL, EMNLP, NAACL<br>
         * 다루는 task<br>
         &nbsp; - &nbsp; Low-level parsing <br>
         &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Tokenization : 주어진 문장을 이루는 단어를 token이라고 하며 문장을 단어로 쪼개는 과정을 tockenization이라고 한다.<br>
@@ -52,7 +52,6 @@
         &nbsp; - &nbsp; 문장이나 문서에서 유용한 정보 추출<br>
         &nbsp; - &nbsp; Document clustering<br>
         &nbsp; - &nbsp; 사회현상을 파악하는 일<br>
-
         * Information retrieval -> conferences : SIGIR, WSDM, CIKM, RecSys
         * 다루는 task
         &nbsp; - &nbsp; 검색 기술을 연구하는 분야<br>
