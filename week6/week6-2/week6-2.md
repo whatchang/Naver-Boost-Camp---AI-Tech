@@ -24,7 +24,7 @@
 [한국 블로그1](https://wegonnamakeit.tistory.com/7) <- input/output weight conflict에 대한 내용이 있다. <br>
 [한국 블로그2](https://ratsgo.github.io/natural%20language%20processing/2017/03/09/rnnlstm/) <- LSTM의 전반적인 내용 + backpropagation에 대해서 잘 나온 것 같음 + 유용한 댓글도 많다. but backpropagation에서 의문이 드는 내용이 있다(ht에 대해서 backpropagation을 설명하는게 아니라 ct에 대해서 설명하는 점).<br><br>
 
-[외국 블로그1](https://stats.stackexchange.com/questions/185639/how-does-lstm-prevent-the-vanishing-gradient-problem) <- gradient vanishing문제를 어느정도 해결할 수 이유에 대해서 설명(ht = ot @ ct이므로 이때 ot는 gradient vanshing으로 gradient값이 없더라도 ct에 대한 gradient가 살아남아서 이것이 ht-1에 전달된다는 내용) + 이와 관련된 논문 추천해줌([1] Pascanu, Razvan, Tomas Mikolov, and Yoshua Bengio. "On the difficulty of training recurrent neural networks." ICML (3) 28 (2013): 1310-1318.<br>[2] Bayer, Justin Simon. Learning Sequence Representations. Diss. München, Technische Universität München, Diss., 2015, 2015.)<br>
+[외국 블로그1](https://stats.stackexchange.com/questions/185639/how-does-lstm-prevent-the-vanishing-gradient-problem) <- gradient vanishing문제를 어느정도 해결할 수 이유에 대해서 설명(ht = ot ⊙ ct이므로 이때 ot는 gradient vanshing으로 gradient값이 없더라도 ct에 대한 gradient가 살아남아서 이것이 ht-1에 전달된다는 내용) + 이와 관련된 논문 추천해줌([1] Pascanu, Razvan, Tomas Mikolov, and Yoshua Bengio. "On the difficulty of training recurrent neural networks." ICML (3) 28 (2013): 1310-1318.<br>[2] Bayer, Justin Simon. Learning Sequence Representations. Diss. München, Technische Universität München, Diss., 2015, 2015.)<br>
 [외국 블로그2](https://www.quora.com/How-does-LSTM-help-prevent-the-vanishing-and-exploding-gradient-problem-in-a-recurrent-neural-network) <- 각 gate의 outputdl 1보다 클 수 없으므로 gradient exploding문제가 발생하지 않는다고 설명해줌<br>
 [외국 블로그3](https://www.reddit.com/r/MachineLearning/comments/34piyi/why_can_constant_error_carousels_cecs_prevent/) <- 여기서는 위의 외국 블로그2의 반박되는 내용이 있다. 여기서는 vanishing문제는 블로그1와 같이 해결이 되었지만 gradient exploding은 2가지 갈래길(ot, ct)중에서 한쪽에서 exploding이 있다면 즉 값이 점점 커진다면 이것은 전체 gradient도 exploding된다고 함. <- 여기서 의문점이 gradient가 증가할 수 있는 구조인가?라는 의문점이 들었다 + 아래 또 다른 댓글에서도 나와 같은 생각을 함(그런데 답변이 없었다 ㅠㅠ).<br>
 <br>
@@ -35,6 +35,9 @@
 - [3]Bayer, Justin Simon. Learning Sequence Representations. Diss. München, Technische Universität München, Diss., 2015, 2015. <- 아직 읽어보지 못함
 
 <br>
+
+#### 서적<br>
+- [1] Deep Learning from Scratch2 (한빛미디어) <- LSTM의 ht를 구할때 ⊙(아다마르 곱hadamard product, 행렬곱이 아닌 원소곱을 뜻함) 덕분에 곱셈이 누적되는 효과가 발생하지 않아서 기울기 소실 혹은 exploding이 발생하기 어렵다고 나옴.
 
 ## 2. 학습 회고
 
