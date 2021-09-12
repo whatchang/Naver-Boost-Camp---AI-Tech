@@ -46,14 +46,14 @@
         &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; Entailment prediction : 두 문장간의 모순 내포 등을 인지하는 task<br>
         &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; question answering : 문장(question)을 이해하는 하고 답을 나타내는 task<br>
         &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; dialog systems : 챗봇과 같은 task<br>
-        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; summarization : 주어진 문서를 요약하는 task
-        * &nbsp;Text mining -> conferences : KDD, The WebConf, WSDM, CIKM, ICWSM
+        &nbsp;&nbsp;&nbsp;&nbsp; ‣ &nbsp; summarization : 주어진 문서를 요약하는 task<br><br>
+        * &nbsp;Text mining -> conferences : KDD, The WebConf, WSDM, CIKM, ICWSM<br>
         * &nbsp;다루는 task<br>
         &nbsp; - &nbsp; 문장이나 문서에서 유용한 정보 추출<br>
         &nbsp; - &nbsp; Document clustering<br>
-        &nbsp; - &nbsp; 사회현상을 파악하는 일<br>
-        * Information retrieval -> conferences : SIGIR, WSDM, CIKM, RecSys
-        * 다루는 task
+        &nbsp; - &nbsp; 사회현상을 파악하는 일<br><br>
+        * Information retrieval -> conferences : SIGIR, WSDM, CIKM, RecSys<br>
+        * 다루는 task<br>
         &nbsp; - &nbsp; 검색 기술을 연구하는 분야<br>
         &nbsp; - &nbsp; 여기에 포함되는 세부분야 중 추천시스템이 있다.<br>
     <br>
