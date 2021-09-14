@@ -82,6 +82,8 @@
     * Question!
         * exp(), 기댓값이란?
         * positional embedding은 없는가? 있다면 positional encoding과 차이점은?
+        &nbsp; encoding &nbsp; : 고정된 규치
+        &nbsp; embedding &nbsp; : 학습할 수 있는 규칙<br>
         * positional encoding에서 cos, sin 등의 주기함수를 사용해서 값을 주는 이유는?
         * a,b,c 라는 input이 있고 여기서 a에 대한 query를 통해서 attetion 값을 구할때 이때는 softmax를 거치고 value를 내적한 값은 항상 a key, a value에 대한 vector값이 크지 않나 싶다. -> 항상 자기 자신에 대한 attention 값이 높지 않을까 싶은데 이것을 어떻게 해결했는가?
         * 실제 test일때는 decoder의 input을 알지 못할텐데 이때 input에 어떤식으로 들어가는지 궁금하다. <-> 만약 train일 경우에는 teacher forcing처럼 decoder의 input을 알려주면 되지만 test의 경우에는 그럴 수가 없으므로
