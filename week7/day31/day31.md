@@ -110,7 +110,8 @@
 #### GPT-2
 
 * 무엇을 해결하고자 하는가?
-    * decaNLP에서
+    * The Natural Language Decathlon : Multitask Learning as Question Answering에 착안(자연어의 모든 task들이 질의응답 형태로 통합할 수 있다. 예를 들어서, 주어진 문장에서 감정의 판단할때 '해당 문장의 감정은 어떤한 것 같나?' 등의 질문을 통해서 질의응당 task로 만들 수 있고 또 요약의 경우는 '주어진 문단에서의 주제는 무엇인가?'등으로 만들 수 있다.)
+    * down-stream tasks in a zero-shot setting <- fine tuning 하지 않음
 
 <br>
 
@@ -120,25 +121,32 @@
 <br>
 
 * 특징
-    * down-stream tasks in a zero-shot setting
+    * Datasets : redit + 답글 중 좋아요 3개 이상 의 글을 사용
+    * preprocessing - byte pair encoding : 데이터 압축 알고리즘 중에 하나이며 빈도수에 따라 문자를 병합하여 서브워드를 구성한다. 단어를 문자 단위로 쪼갠 뒤 가장 높은 쌍을 하나로 통합하는 과정을 반복하여 token dictionary를 만든다. 
+        * [byte pair encoding에 대한 자세한 내용](https://wikidocs.net/22592)
+    * [접근법 - 논문에 나온 내용 번역한 글](https://greeksharifa.github.io/nlp(natural%20language%20processing)%20/%20rnns/2019/08/28/OpenAI-GPT-2-Language-Models-are-Unsupervised-Multitask-Learners/)
+
 
 <br>
 
 * 핵심구조
-
+    * GPT-1과 유사하다.
 
 <br>
 
 * 동작과정
+    * GPT-1과 대부분이 비슷하지만 token에 대해서 BPE을 해준다는 차이가 있다.
+    * task에 대한 fine tuning을 해주지 않는다.
 
 <br>
 
 * 아직 이해가 덜 된 부분 / 좀 더 공부할 내용
-
+    * [아직/좀 더] self-supervised learning
 
 <br>
 
 * Question!
+    * task에 대한 fine tuning 없이 사용했는데 어떻게 결과가 괜찮게 나온 것일까? 
 
 <br>
 <br>
@@ -146,94 +154,142 @@
 #### GPT-3
 
 * 무엇을 해결하고자 하는가?
+    * 내 뇌피셜 : 이전 GPT-2의 한계를 극복하려고 했을 것 같다.
+        <img src='./img/gpt-2-discussion.png'>
+        * [GPT-2 discussion에 대한 블로그](https://greeksharifa.github.io/nlp(natural%20language%20processing)%20/%20rnns/2019/08/28/OpenAI-GPT-2-Language-Models-are-Unsupervised-Multitask-Learners/)
+        
 
 <br>
 
-* 이전과 GPT-1과 다른 점은?
-
+* 이전과 GPT-2와 다른 점은?
+    * 기존 모델의 파라미터 수보다 훨씬 많은 파라미터를 가지도록 설계되었다.
 <br>
 
 * 특징
+    <img src=./img/gpt3-features.png>
+    * zero-shot : 위의 그림 처럼 task를 주면 해당 target에 대해서 task를 수행한다. <- 학습 데이터 사용 하지 않는 방식
+    * one-shot : task를 주고 example을 주고 해당 target에 대해서 task를 수행하도록 한다. <- 학습 데이터를 1쌍만 주었음. But 이전까지의 모델에서는 output layer를 추가하고 이것을 이용하는 방식이었지만 GPT-3는 그러한 변형없이 원본 그대로 사용한다. 마치 주어진 example이 task와 동일한 text인 것처럼
+    * few-shot : one-shot과 비슷하면 다만 차이점이 있다면 그것은 example의 수가 늘어났다는 점이다.
+    * 성능 : few-shot > one-shot > zero-shot
+    <img src=./img/notgpt3.png height =400>
+        * 출처 : https://velog.io/@nawnoes/GPT-3%EC%9D%98-%EB%AA%A8%EB%8D%B8
+    
 
 <br>
 
 * 핵심구조
+    * GPT-2와 유사
+    * 약간의 수정된 점
+        * initialization, pre-normalization, reversible tokenization
+        * Transformer layer <- SparseTrnsformer(기존의 transformer layer 당 복잡도를 줄이기 위한 방식, O(Nlogn))와 유사한 alternationg dense와 locally banded sparse attention
+        <img src='./img/sparsetransformer.png'> 
+        <img src='./img/sparsetransformer2.png'>
+        * [자료 출처](https://velog.io/@nawnoes/GPT-3%EC%9D%98-%EB%AA%A8%EB%8D%B8)
+        * [두 번째 이미지 블로그](https://judy-son.tistory.com/5)
+        * [두 번째 이미지 출처 논문](https://arxiv.org/pdf/2009.06732.pdf)
+        * [Sparse Attention에 대한 유튜브 - 고려대학교 DSBA 연구실](https://www.youtube.com/watch?v=m8rWN2-VkcU)
 
 
 <br>
 
 * 동작과정
-
+    * GPT-2와 유사할 것 같다. 다만 zero-shot말고도 one-shot, few-shot등이 있다.
 <br>
 
 * 아직 이해가 덜 된 부분 / 좀 더 공부할 내용
-
+    * [아직/좀 더] 수정된 부분에 대한 자세한 내용
+     
 
 <br>
 
 * Question!
-
+    * [좀 더]one/few shot에서 example을 주지만 output layer를 추가해 주지 않는다(기존의 GPT-1에서는 task에 따른 output layer를 추가해주었다.). 그렇다면 추가해줄 때와 추가하지 않을 때는 어떤 차이들이 있나?(성능, data의 shape, 장단점은?, 이 부분이 학습에 영향을 주는가?)
 <br>
 <br>
 
 #### ALBERT
 
 * 무엇을 해결하고자 하는가?
+    * pre-trained language representation model은 대규모의 학습데이터 + 시간 + 많은 GPU가 필요했다. -> 그래서 모델의 size는 줄이고 성능을 높이고자 함.
 
 <br>
 
-* 이전과 GPT-1과 다른 점은?
+* 이전과 BERT과 다른 점은?
+    <img src=./img/albert1.png>
+    * transformer block에 값을 주기 전에 먼저 word embedding에 대한 size를 줄여준다. 이때 이용하는 방식이 low rank matrix factorization vectorization이다. <- [2주차 DL때 GoogleNet에서 1*1 convolution을 사용하는 이유와 비슷한 것 같다.](https://github.com/whatchang/Naver-Boost-Camp---AI-Tech/blob/master/week2/day8/day8.md)
+    * transformer layer간의 파라미터를 공유한다. -> cross-layer parameter sharing
+        * [이러한 아이디어는 이전 universal transformer에서 나왔다고 합다.](https://arxiv.org/abs/1807.03819)
+    * BERT에서는 NSP(Next Sentence Prediction)이라는 task를 수행하였는데 이후 논문들에서 이러한 것이 실효성이 없다고 지적(이유 : 실제 임의로 뽑은 문장들 간의 topic이 다를 확률이 높기 때문, 즉 순서를 맞추는 문제가 아닌 topic을 맞추는 것이 됨)을 하여 ALBERT에서는 연속적으로 등장하는 문장 2개를 순서대로 concat을 하거나 혹은 순서를 바꿔서 concat을 한 후 이것이 올바른 순서인지 아닌지에 대해서 판단하도록 task가 바꿔줬다. 
+    * [좀 더 자세한 설명](https://y-rok.github.io/nlp/2019/10/23/albert.html)
 
 <br>
 
 * 특징
+    <img src=./img/albert2.png>
+    * bert보다 parameter의 개수는 많이 줄였지만 성능에서는 많은 차이가 나지않고 최대한 유지되는 모습을 보였다.
+    * Factorized embedding parameterization
+    * Cross-layer parameter sharing
+    * Sentence order prediction
+    
+    
+    
 
 <br>
 
 * 핵심구조
+    * 구조는 BERT와 동일한 것 같다. 
 
 
 <br>
 
 * 동작과정
+    * BERT와 비슷하지만 중간중간에 Factorized embedding parameterization, Cross-layer parameter sharing, Sentence order prediction 를 적용시킨다는 점에서 다를 것 같다.
 
 <br>
 
 * 아직 이해가 덜 된 부분 / 좀 더 공부할 내용
+    * [아직/좀 더] 현재 겉핥기 식으로 공부한 것 같다. -> 좀 더 자세하게 보면 좋을 것 같다.
 
 
 <br>
 
 * Question!
+    * 파라미터를 공유했는데 성능이 많이 떨어지지 않는 이유? -> layer간의 파라미터를 공유하면 layer를 그만큼 적게 쌓는거랑 같은거 아닌가?
 
 <br>
 <br>
 
-#### ELECTRA
+#### ELECTRA : Efficiently Learning an Encoder that Classifies Token Replacements Accurately
 
 * 무엇을 해결하고자 하는가?
-
+    * 기존의 MLM(Masked Lanuage Modeling)방식은 pre-trained을 통해서 좋은 결과를 내기까지 대량의 계산이 필요하다. -> 이러한 부분을 해결하고자.
 <br>
 
-* 이전과 GPT-1과 다른 점은?
+* 이전과 모델들과 어떤점이 다른가?
+    * 학습시 masking을 하고 생성된 문장에 대해서 어떤 단어가 origin이고 replaced된 단어인지 예측하는 task로 학습을 한다는 점. -> 주된 학습 방식이 MLM(생성)이 아닌 판별이라는 점
 
 <br>
 
 * 특징
-
+    <img src=./img/electra1.png>
+    * 위에서 generator model과 discriminator 모델은 서로 적대적인 관계이다. <- GAN model의 아이디어를 착안했다.
+    <img src='./img/electra2.png'>
+    * XLNet을 제외한 이전 모델들보다 적은 step으로 좋은 성능을 낸다. -> 좋은 성능을 내기 위한 계산량을 줄일 수 있다(학습 시간을 줄일 수 있다.).
 <br>
 
 * 핵심구조
+    * GAN과 유사한 생성 모델과 판별 모델 2개의 네트워크로 이루어져있다.
 
 
 <br>
 
 * 동작과정
+    * 개인적인 생각 : 구조가 GAN과 비슷하므로 동작과정 또한 유사하지 않을까 싶다. 
 
 <br>
 
 * 아직 이해가 덜 된 부분 / 좀 더 공부할 내용
-
+    * [전체적인 내용에 대한 좀 더 이해 필요 - 참고 사이트(논문 리뷰 블로그)](https://littlefoxdiary.tistory.com/41)
 
 <br>
 
@@ -241,7 +297,19 @@
 
 <br>
 <br>
+
+* Light-weight model(경량화 모델)
+    * 나오게 된 배경 : 최근 모델의 트렌드는 모델의 파라미터와 학습 데이터가 너무 크기 때문에 더이상 개인 혹은 일반적인 기업에서 연구 및 사용하기 힘들다. 그래서 경량화를 시도하게 되었다.
+    * 여러 경량화 기법이 존재한다.
+    * DistillBERT - 학습시 teacher model의 vocabulary에 대한 확률 분포를 student 모델(경량화 모델)이 사용한다. -> teacher 모델에 대해서 최대한 모사하기 위해서
+    * TinyBERT - teacher model의 확률 분포뿐만이 아니라 $W_q$, $W_k$, $W_v$, $W_0$ 등 최대한 모든 부분의 정보를 모사하려고 한다.
+
+* Fusing Knowledge Graph into Language Model <- 외부적인 자료(배경지식, 상식)를 잘 결합하는 지에 대한 graph
+    * 주어진 문장에서 추자적인 정보가 필요할때 이것을 잘 활용하는지? - BERT의 경우는 잘 활용하지 못함
+        * 예를 들어서 '꽃을 심기 위해 땅을 팠다', '집을 짓기 위해서 땅을 팠다.' 가 주어졌을때 '무슨 도구로 땅을 팠는가?' 라는 질문에 대해서 잘 대답하지 못한다. But 사람의 경우 이러한 질문에 대해서 대답할 수 있다(꽃을 심기 위해서 작은 도구 호미, 삽 등을 사용했을 거라고 예측하고 집을 짓기 위해서는 포크레인과 같은 큰 도구를 사용했을거라고 생각함). 즉 배경지식, 상식 등에 대해서는 잘 활용하지 못 함.
+    - ERINE, KagNet 등이 있다.
 <br>
+
 
 ## 2. 과제 정리
 
