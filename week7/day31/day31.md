@@ -64,7 +64,7 @@
 #### BERT
 
 * 무엇을 해결하고자 하는가?
-
+    * GPT-1과 ElMo에서는 단어의 관계, 문맥적인 정보를 잘 학습시키지 못하는 것 같다. -> GPT-1은 unidirection이고 ElMo는 bidirection이지만 중간에 있는 단어들을 똑같이 문맥을 잘 학습 못하기 때문 -> transformer encoder부분을 이용하자(bidirection이고 모든 word에 대해서 fully connection이기 때문)
 <br>
 
 * 이전과 GPT-1과 다른 점은?
@@ -290,6 +290,7 @@
 
 * 아직 이해가 덜 된 부분 / 좀 더 공부할 내용
     * [전체적인 내용에 대한 좀 더 이해 필요 - 참고 사이트(논문 리뷰 블로그)](https://littlefoxdiary.tistory.com/41)
+    * [멘토님이 추천해주신 블로그](https://blog.pingpong.us/electra-review/)
 
 <br>
 
