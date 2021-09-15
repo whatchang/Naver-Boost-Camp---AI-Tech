@@ -294,7 +294,7 @@
 <br>
 
 * Question!
-
+    * backpropagation이 어떤 식으로 진행되는지 궁금하다. -> backpropagation에 대한 자세한 내용 찾아보기.
 <br>
 <br>
 
