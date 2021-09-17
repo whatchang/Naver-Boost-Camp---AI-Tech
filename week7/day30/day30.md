@@ -67,7 +67,7 @@
         * Encoder
         &nbsp; 1. &nbsp; input sequence에 대해서 positional encoding하여 vector 생성<br>
         &nbsp; 2. &nbsp; 위의 핵심 구조와 같은 순서로 진행되면 이 과정을 n번 반복한다(n은 block(핵심구조)의 개수). -> input sequence와 동일한 개수의 encoding vector가 나오게 된다.<br>
-        <br>
+
         * Decoder
         &nbsp; 1. &nbsp; output vocabulary에 대한 positional encoding을 수행하고 multi-head atteion과 residual & layer normalization을 수행해준다.<br>
         &nbsp; 2. &nbsp; encoder에서 나온 vector(value, key)와 decoder의 vector(query)를 multi-head attention을 해주고 이것을 resiual connection + layer normalization -> feed forward + residual connection + layer normalization을 해준다. <br>
