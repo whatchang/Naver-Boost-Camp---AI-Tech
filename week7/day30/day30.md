@@ -57,7 +57,7 @@ src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML">
     * 동작과정
         <img src='./img/tramsformer.png'><br>
         * self attention의 동작과정<br>
-        &nbsp; 1. &nbsp; input vecor에 대한 query, key, value값을 만든다. 이때 $W_q$, $W_k$, $W_v$ 등의 가중치를 이용하여 만든다. <br>
+        &nbsp; 1. &nbsp; input vecor에 대한 query, key, value값을 만든다. 이때 ($W_q$), ($W_k$), (W_v) 등의 가중치를 이용하여 만든다. <br>
         &nbsp; 2. &nbsp; 해당 query에 대해서 key값들을 내적해서 값을 구한다. <br>
         &nbsp; 3. &nbsp; 2단계에서 생성한 값에 softmax를 취해준다.<br>
         &nbsp; 4. &nbsp; 3단계에서 나온 값에 v값들을 내적해준다. 그러면 해당 query에 대한 attention값이 만들어진 것이다.<br>
