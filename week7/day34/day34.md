@@ -14,6 +14,12 @@
 
 1. [공부한 내용 정리](#1-공부한-내용-정리)
 
+2. [피어세션 정리](#2-피어세션-정리)
+
+3. [학습 회고](#3-학습-회고)
+
+## 1. 공부한 내용 정리
+
 * 주제 : LSTM은 완벽하게 gradient vanishing/exploding 문제를 해결하였는가?
 
     * 간단한 LSTM 소개
@@ -41,14 +47,6 @@
         &nbsp; [7] &nbsp; 'What is a Constant Error Carousel?', https://deepai.org/machine-learning-glossary-and-terms/constant%20error%20carousel<br>
 
 * 실습 코드 .py파일로 바꿔서 모듈화 하기 - [템플릿은 이것 이용](https://github.com/victoresque/pytorch-template)
-
-
-2. [피어세션 정리](#2-피어세션-정리)
-
-3. [학습 회고](#3-학습-회고)
-
-## 1. 공부한 내용 정리
-
 
 <br>
 
