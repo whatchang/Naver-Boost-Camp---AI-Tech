@@ -78,7 +78,8 @@
 
 * Summary and conclusions
     * gradient exploding - clipping
-    * gradient vanishing - regularization
+    * gradient vanishing - regularization <- backpropagation때 gradient가 사라지지 않도록 정규화를 해준다. jacobian matrices이 norm을 관련된 방향으로 보존하도록 해준다. <- 이 부분에 대해서 해석을 잘 못하겠다 ㅠㅠ, 원본은 아래 문장이다.
+        * <img src=./img/ex1.png>
 
 <br>
 
