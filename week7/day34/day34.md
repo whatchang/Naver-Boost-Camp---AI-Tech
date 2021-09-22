@@ -26,7 +26,7 @@
         * 그런데 내 생각에는 중요한 것은 hidden state의 backpropagation이라고 생각한다.
         * 다음은 LSTM에서 사용되는 구조인 여러 gate와 cell state, output(hidden state)를 구하는 식이다[1]. ht는 ouput(t)와 tanh(t번째 time step의 cell state)를 아마다를 곱한 값이다.
         <img src=./img/lstm0.png>
-        * 만약 ht번째부터 backpropagation을 해준다면 ht에 대한 o(t)의 미분값을 구하고 ht에 대한 tanh(cell state(t))를 해주는 식으로 역전파가 이뤄져야 하므로 cell state에서의 backpropagation만 생각했을때와 다를 수도 있다고 생각하였다.
+        * 만약 ht의 backpropagation을 생각해본다면 ht에 대한 o(t)의 미분값을 구하고 그쪽방향으로 역전파를 진행하고 ht에 대한 tanh(cell state(t))의 도함수를 구하고 해당 방향으로도 역전파가 진행되므로 cell state에서의 backpropagation만 생각했을때와 다를 수도 있다고 생각하였다.
         * 요약 : 중요한 것은 hidden state vector부터의 backpropagation이라고 생각하였고 이 부분부터의 역전파를 생각한다면 이전에 배운 내용과 차이가 있을 거라고 생각하여 조사하게 되었다.
 
     * 간단한 LSTM 소개
@@ -35,7 +35,7 @@
 
     * gradient vanishing을 해결하였는가?
         * gradient vanishing 문제를 완전히 해결한 것은 아니지만 vanilla RNN에 비해서 완화시켰다.
-        * 완화시킨 방식을 알기 전 상기시키면 좋은 개념 : 이전의 hidden state vector의 정보를 forget gate에서 input으로 사용한다. 또 Ct부분에서의 역전파를 생각한다면 forget gate값만 이용한다(Ct에 대해서 Ct-1의 미분값이므로).
+        * 완화시킨 방식을 알기 전 상기시키면 좋은 개념 : 이전의 hidden state vector의 정보를 forget gate에서 input으로 사용한다. 또 Ct부분에서의 역전파를 생각한다면 forget gate값만 이용한다(Ct에 대해서 Ct-1의 도함수이므로).
         * 완화시키는 원리는 ht부분부터의 backpropagtaion때 output gate에 대한 부분이 gradient vanishing이 있더라도 cell state 부분에서 gradient가 남아 있으므로 전체 gradient는 사라지지 않게 된다.[2],
         * LSTM의 ht를 구할때 ⊙(아다마르 곱hadamard product, 행렬곱이 아닌 원소곱을 뜻함) 덕분에 곱셈이 누적되는 효과가 발생하지 않아서 기울기 소실 혹은 exploding이 발생하기 어렵다고 나옴(아마다르 곱은 원소별 곱이며 이는 LSTM에서 매번 새로운 게이트 값을 이용하여 원소곱을 하므로 곱셈의 효과가 누적되지 않아 기울기 소실이 일어나기 힘들다.).[3]
 
@@ -48,7 +48,7 @@
         * cell state라는 constant error carousel구조 덕분에 gradient vanishing/exploding을 완화시킬 수 있었던 것 같다.
     
     * 배운 것
-        * 이전에는 막연하게 cell state에서 더하기 연산을 하므로 이때 도함수가 forget gate값이므로 gradient vanishing/exploding이 해결되었다고 알았다. 그러나 이번 기회를 통해서 LSTM의 구조적인 부분으로 인해서 gradient vanishing을 막을 수 있고([2], [3]) gradient exploding부분도 추측해볼 수 있었다([4],[5],[7]).
+        * 이전에는 막연하게 cell state에서 더하기 연산을 하므로 이때 도함수가 forget gate값이므로 gradient vanishing/exploding이 해결되었다고 알았다. 그러나 이번 기회를 통해서 LSTM의 구조적인 부분으로 인해서 gradient vanishing을 완화시킬 수 있고([2], [3]) gradient exploding부분도 추측해볼 수 있었다([4],[5],[7]).
 
     * TMI
         * vanilla LSTM에서는 forget gate없었고 대신 CEC(Constant Error Carousel, 이것 덕분에 vainshing/exploding을 완화시킬 수 있었다.)라는 고정 weight가 1인 순환 연결 구조를 사용하였고 추후 forget gate가 추가되면서 CEC를 forget gate로 reset할 수 있게 되면서 LSTM이 long term dependency 문제를 완화시킬 수 있게 되었다[6].
