@@ -64,10 +64,21 @@
 <br>
 
 * Experiments and results
+    * Temporal order problem 
+        * 아래는 MSGD, MSGD-C, MSGD-CR에 대한 sequence길이에 따른 temporal order problem을 해결 비율이다.
+        <img src=./img/graph1.png>
+        * 위의 그림에서 MSGD-C는 batch stochastic gradient descent에서 clipping strategy를 사용한 것이며 여기에 R이 추가된 MSGD-CR은 MSGD-C에서 regularization term이 추가된 것이다.
+        * CR방식을 사용한다면 sigmoid, tanh, smart-tanh등의 활성화 함수에서 rate of success가 좋게 나오는 것을 알 수 있다. 
+        * ! __여기서 큰 문제__ rate of success가 무엇인지 제대로 이해하지 못함 ㅠㅠ
+    <br>
 
+    * Other pathological tasks
+        * SGD-CR은 addition problem, multiplication problem, 3-bit temporal order problem, random permutation problem 등을 해결하였다.
 <br>
 
 * Summary and conclusions
+    * gradient exploding - clipping
+    * gradient vanishing - regularization
 
 <br>
 
@@ -79,5 +90,7 @@
 <br>
 
 ## 2. 학습 회고
+
+* 논문에 대한 블로그 요약이나 유튜브 영상을 보지 않고 논문 원본만 읽고 정리한 것은 이번이 처음이라서 어렵고 이해가 안 되는 부분이 많았다. 투자한 시간에 비해서 이해한 것은 많지 않았지만 좋은 경험이 된 것 같다. 앞으로는 이런식으로 논문 읽는 것에 도전해 볼 생각이다 ㅎㅎ
 
 <br>
