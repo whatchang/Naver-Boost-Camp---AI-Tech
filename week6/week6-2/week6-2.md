@@ -31,7 +31,7 @@
 
 #### 논문<br>
 - [1]S.HochreiterandJ.Schmidhuber.Longshorttermmemory.Neuralcomputation,9(8):1735–1780,1997. <- LSTM 원본 논문, LSTM이 해결하고자 한 문제 + 접근 방식 + core idea + LSTM 한계 + forward/backward flow를 수식으로 설명해준다. BUT 나의 영어 실력 + 수학 실력 부족 ㅠㅠㅠㅠ -> 그래서 이해하지 못함 + 다 못 읽음
-- [2]Pascanu, Razvan, Tomas Mikolov, and Yoshua Bengio. "On the difficulty of training recurrent neural networks." ICML (3) 28 (2013): 1310-1318. <- [논문 정리한 것](../week8/week8-1/week8-1.md)
+- [2]Pascanu, Razvan, Tomas Mikolov, and Yoshua Bengio. "On the difficulty of training recurrent neural networks." ICML (3) 28 (2013): 1310-1318. <- [논문 정리한 것](../../week8/week8-1/week8-1.md)
 - [3]Bayer, Justin Simon. Learning Sequence Representations. Diss. München, Technische Universität München, Diss., 2015, 2015. <- 아직 읽어보지 못함
 
 <br>
