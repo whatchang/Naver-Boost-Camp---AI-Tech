@@ -58,7 +58,7 @@
     * 위의 모델의 확장된 버전이 leaky integration unit이다. 좀 더 자세한 내용은 'Jaeger, H., Lukosevicius, M., Popovici, D., and Siew- ert, U. (2007). Optimization and applications of echo state networks with leaky- integrator neurons. Neural Networks, 20(3), 335–352.'을 읽어보자.
     * clipping the gradient's temporal components를 이용하여 gradient exploding/vanishing을 해결하려는 접근 방식도 있다. 'Mikolov, T., Deoras, A., Kombrink, S., Burget, L., and Cernocky, J. (2011). Empirical evaluation and combination of advanced language modeling tech- niques. In Proc. 12th annual conference of the in- ternational speech communication association (IN- TERSPEECH 2011)'과 'Mikolov, T. (2012). Statistical Language Models based on Neural Networks. Ph.D. thesis, Brno University of Technology'을 참고해보면 좋을 것 같다.
     * Scaling down the gradients -> gradient exploding을 해결하는데 도움
-    <img src=./img/scailing_down.png>
+    <img src=./img/scailing_down.png><br>
     * Regularization - Backpropagation때 사용되는 파라미터 값에 대한 정규화 -> gradient vanishing을 해결하는데 도움을 준다. => 해결할 수 있는 요인에 대한 설명은 수식과 영어를 잘 이해하지 못해서 설명 불가능 ㅠㅠ(해당 논문 7page 3.3 vanishing gradient regularization을 읽어보면 된다.)
 
 <br>
