@@ -56,15 +56,15 @@
         * gradient exploding 문제를 완벽하게 해결하기 위해서는 clipping방식을 사용해야 한다([1] 의 p.18~20과 [7]논문에 제시되어 있다.)
 
     * 참고한 사이트 및 논문  
-        * 간단한 LSTM 소개
+        * 간단한 LSTM 소개<br>
         &nbsp; [1] &nbsp; https://web.stanford.edu/class/cs224n/slides/cs224n-2019-lecture07-fancy-rnn.pdf, p.22~26
-        * gradient vanishing을 해결하였는가?
+        * gradient vanishing을 해결하였는가?<br>
         &nbsp; [2] &nbsp; https://stats.stackexchange.com/questions/185639/how-does-lstm-prevent-the-vanishing-gradient-problem<br>
         &nbsp; [3] &nbsp; Deep Learning from Scratch2 (한빛미디어), p.256
-        * gradient exploding을 해결하였는가?
+        * gradient exploding을 해결하였는가?<br>
         &nbsp; [4] &nbsp; https://www.quora.com/How-does-LSTM-help-prevent-the-vanishing-and-exploding-gradient-problem-in-a-recurrent-neural-network<br>
         &nbsp; [5] &nbsp; S.HochreiterandJ.Schmidhuber.Longshorttermmemory.Neuralcomputation,9(8):1735–1780,1997.
-        * TMI 
+        * TMI <br>
         &nbsp; [6] &nbsp; 'What is a Constant Error Carousel?', https://deepai.org/machine-learning-glossary-and-terms/constant%20error%20carousel<br>
         &nbsp; [7] &nbsp; Pascanu, Razvan, Tomas Mikolov, and Yoshua Bengio. "On the difficulty of training recurrent neural networks." ICML (3) 28 (2013): 1310-1318. p.4
 
