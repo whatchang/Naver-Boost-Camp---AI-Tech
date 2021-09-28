@@ -25,7 +25,7 @@
         * 이제까지 배운 내용에서는 cell state에 대한 backpropagation을 다뤘고 cell state 덕분에 gradient vanishing/exploding이 완화되었다고 배웠다.
         * 그런데 내 생각에는 중요한 것은 hidden state의 backpropagation이라고 생각한다.
         * 다음은 LSTM에서 사용되는 구조인 여러 gate와 cell state, output(hidden state)를 구하는 식이다[1]. ht는 ouput(t)와 tanh(t번째 time step의 cell state)를 아마다를 곱한 값이다.
-        <img src=./img/lstm0.png>
+        <img src=./img/lstm0.png><br>
         * 만약 ht의 backpropagation을 생각해본다면 ht에 대한 o(t)의 미분값을 구하고 그쪽방향으로 역전파를 진행하고 ht에 대한 tanh(cell state(t))의 도함수를 구하고 해당 방향으로도 역전파가 진행되므로 cell state에서의 backpropagation만 생각했을때와 다를 수도 있다고 생각하였다.
         * 요약 : 중요한 것은 hidden state vector부터의 backpropagation이라고 생각하였고 이 부분부터의 역전파를 생각한다면 이전에 배운 내용과 차이가 있을 거라고 생각하여 조사하게 되었다.
 
@@ -56,15 +56,15 @@
         * gradient exploding 문제를 완벽하게 해결하기 위해서는 clipping방식을 사용해야 한다([1] 의 p.18~20과 [7]논문에 제시되어 있다.)
 
     * 참고한 사이트 및 논문  
-        * 간단한 LSTM 소개
+        * 간단한 LSTM 소개<br>
         &nbsp; [1] &nbsp; https://web.stanford.edu/class/cs224n/slides/cs224n-2019-lecture07-fancy-rnn.pdf, p.22~26
-        * gradient vanishing을 해결하였는가?
+        * gradient vanishing을 해결하였는가?<br>
         &nbsp; [2] &nbsp; https://stats.stackexchange.com/questions/185639/how-does-lstm-prevent-the-vanishing-gradient-problem<br>
         &nbsp; [3] &nbsp; Deep Learning from Scratch2 (한빛미디어), p.256
-        * gradient exploding을 해결하였는가?
+        * gradient exploding을 해결하였는가?<br>
         &nbsp; [4] &nbsp; https://www.quora.com/How-does-LSTM-help-prevent-the-vanishing-and-exploding-gradient-problem-in-a-recurrent-neural-network<br>
         &nbsp; [5] &nbsp; S.HochreiterandJ.Schmidhuber.Longshorttermmemory.Neuralcomputation,9(8):1735–1780,1997.
-        * TMI 
+        * TMI <br>
         &nbsp; [6] &nbsp; 'What is a Constant Error Carousel?', https://deepai.org/machine-learning-glossary-and-terms/constant%20error%20carousel<br>
         &nbsp; [7] &nbsp; Pascanu, Razvan, Tomas Mikolov, and Yoshua Bengio. "On the difficulty of training recurrent neural networks." ICML (3) 28 (2013): 1310-1318. p.4
 
