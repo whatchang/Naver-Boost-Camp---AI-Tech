@@ -44,7 +44,7 @@
     * 모델에 추가로 layer or model을 추가해볼 생각이다.
         * [참고용 코드 - 데이콘](https://dacon.io/competitions/official/235747/codeshare/3072)
     * 위의 참고용 코드에서 MLM pre-train 시키는 코드가 있어서 내 코드에 맞게 수정하여 사용하였다.
-        * 학습은 내일정도 끝날 것 같아서 결과도 내일 나올것 같다. ->  micro_f1 : 63.431, auprc : 65.772
+        * 학습은 내일정도 끝날 것 같아서 결과도 내일 나올것 같다. ->  micro_f1 : 67.468, auprc : 70.972
 
 <br>
 
