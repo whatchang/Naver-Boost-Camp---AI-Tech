@@ -20,7 +20,7 @@
 
 ## 1. 공부한 내용 정리
 
-논문 읽기 - roberta, [질의응답](https://github.com/sangmandu/SangSangPlus/issues/110)
+논문 읽기 - Dense Passage Retrieval for Open-Domain Question Answering
 
 
 <br>
